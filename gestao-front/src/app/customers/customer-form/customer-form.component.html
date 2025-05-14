@@ -1,0 +1,34 @@
+<mat-card class="full-card">
+    <h2>{{ isEdit ? 'Editar Cliente' : 'Novo Cliente' }}</h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>E-mail</mat-label>
+        <input matInput formControlName="email" type="email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="phone" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Endereço</mat-label>
+        <input matInput formControlName="address" />
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" class="full-width">
+        {{ isEdit ? 'Salvar' : 'Criar' }}
+      </button>
+    </form>
+  </mat-card>

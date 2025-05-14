@@ -1,0 +1,21 @@
+<mat-card class="full-card">
+  <h2>Login</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>E-mail</mat-label>
+      <input matInput formControlName="email" type="email" />
+      <mat-error *ngIf="loginForm.get('email')?.invalid">E-mail inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Senha</mat-label>
+      <input matInput formControlName="password" type="password" />
+      <mat-error *ngIf="loginForm.get('password')?.invalid">Senha obrigatória</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" class="full-width">Entrar</button>
+  </form>
+  <p class="redirect">
+    Não tem conta? <a routerLink="/register">Cadastre-se</a>
+  </p>
+</mat-card>

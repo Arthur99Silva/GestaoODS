@@ -1,0 +1,12 @@
+<mat-card class="full-card">
+    <h2>{{ isEdit ? 'Editar Empresa' : 'Nova Empresa' }}</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" class="full-width">
+        {{ isEdit ? 'Salvar' : 'Criar' }}
+      </button>
+    </form>
+  </mat-card>

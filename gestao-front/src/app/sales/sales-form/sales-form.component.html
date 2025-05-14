@@ -1,0 +1,16 @@
+<mat-card class="full-card">
+    <h2>{{ isEdit ? 'Editar Venda' : 'Nova Venda' }}</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Valor</mat-label>
+        <input matInput formControlName="value" />
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Data</mat-label>
+        <input matInput formControlName="date" type="datetime" />
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" class="full-width">
+        {{ isEdit ? 'Salvar' : 'Criar' }}
+      </button>
+    </form>
+  </mat-card>

@@ -1,0 +1,23 @@
+<mat-card class="full-card">
+  <h2>{{ isEdit ? 'Editar Funcionário' : 'Novo Funcionário' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>E-mail</mat-label>
+      <input matInput formControlName="email" type="email" />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" class="full-width">
+      {{ isEdit ? 'Salvar' : 'Criar' }}
+    </button>
+  </form>
+
+  <button mat-button routerLink="/employees">
+    ← Voltar
+  </button>
+</mat-card>
