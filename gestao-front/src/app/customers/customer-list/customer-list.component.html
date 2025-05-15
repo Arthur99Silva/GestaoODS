@@ -7,15 +7,15 @@
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 full-table">
 
       <!-- Nome -->
-      <ng-container matColumnDef="name">
+      <ng-container matColumnDef="nome">
         <th mat-header-cell *matHeaderCellDef>Nome</th>
-        <td mat-cell *matCellDef="let c">{{ c.name }}</td>
+        <td mat-cell *matCellDef="let c">{{ c.nome }}</td>
       </ng-container>
 
       <!-- CPF -->
-      <ng-container matColumnDef="cpf">
-        <th mat-header-cell *matHeaderCellDef>CPF</th>
-        <td mat-cell *matCellDef="let c">{{ c.cpf }}</td>
+      <ng-container matColumnDef="cpf_cnpj">
+        <th mat-header-cell *matHeaderCellDef>CPF/CNPJ</th>
+        <td mat-cell *matCellDef="let c">{{ c.cpf_cnpj }}</td>
       </ng-container>
 
       <!-- E-mail -->
@@ -25,15 +25,15 @@
       </ng-container>
 
       <!-- Telefone -->
-      <ng-container matColumnDef="phone">
+      <ng-container matColumnDef="telefone">
         <th mat-header-cell *matHeaderCellDef>Telefone</th>
-        <td mat-cell *matCellDef="let c">{{ c.phone }}</td>
+        <td mat-cell *matCellDef="let c">{{ c.telefone }}</td>
       </ng-container>
 
       <!-- Endereço -->
-      <ng-container matColumnDef="address">
+      <ng-container matColumnDef="endereco">
         <th mat-header-cell *matHeaderCellDef>Endereço</th>
-        <td mat-cell *matCellDef="let c">{{ c.address }}</td>
+        <td mat-cell *matCellDef="let c">{{ c.endereco }}</td>
       </ng-container>
       
       <!-- Ações -->

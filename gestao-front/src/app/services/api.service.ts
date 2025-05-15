@@ -12,17 +12,21 @@ export interface User {
 
 export interface Customer {
   id: string;
-  name: string;
+  nome: string;
   email: string;
-  cpf: string;
-  phone: string;
-  address: string;
+  cpf_cnpj: string;
+  telefone: string;
+  endereco: string;
 }
 
 export interface Sales {
   id: string;
-  value: number;
-  date: string;
+  valor_total: number;
+  data_venda: string;
+  nota_fiscal: string;
+  fk_cpf_cnpj_cliente: string;
+  fk_forma_pagamento: number;
+  fk_cpf_funcionario: string;
 }
 
 export interface Company {
@@ -32,8 +36,17 @@ export interface Company {
 
 export interface Employee {
   id: string;
-  name: string;
+  nome: string;
   email: string;
+  cpf: string;
+  telefone: string;
+  endereco: string;
+  contrato: string;
+  data_pagamento: string;
+  data_ferias: string;
+  salario: number;
+  senha: string;
+  role: string;
 }
 
 @Injectable({
@@ -55,23 +68,23 @@ export class ApiService {
 
   // === Clientes ===
   getCustomers(): Observable<Customer[]> {
-    return this.http.get<Customer[]>(`${this.baseUrl}/customers`);
+    return this.http.get<Customer[]>(`${this.baseUrl}/clientes`);
   }
 
-  getCustomer(id: string): Observable<Customer> {
-    return this.http.get<Customer>(`${this.baseUrl}/customers/${id}`);
+  getCustomer(cpf: string): Observable<Customer> {
+    return this.http.get<Customer>(`${this.baseUrl}/clientes/${cpf}`);
   }
 
   createCustomer(customer: Omit<Customer, 'id'>): Observable<Customer> {
-    return this.http.post<Customer>(`${this.baseUrl}/customers`, customer);
+    return this.http.post<Customer>(`${this.baseUrl}/clientes`, customer);
   }
 
-  updateCustomer(id: string, customer: Partial<Omit<Customer, 'id'>>): Observable<Customer> {
-    return this.http.put<Customer>(`${this.baseUrl}/customers/${id}`, customer);
+  updateCustomer(cpf: string, customer: Partial<Omit<Customer, 'id'>>): Observable<Customer> {
+    return this.http.put<Customer>(`${this.baseUrl}/clientes/${cpf}`, customer);
   }
 
-  deleteCustomer(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/customers/${id}`);
+  deleteCustomer(cpf: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/clientes/${cpf}`);
   }
 
   // === Empresas ===
@@ -95,44 +108,46 @@ export class ApiService {
     return this.http.delete<void>(`${this.baseUrl}/companies/${id}`);
   }
 
+  // === Funcionários ===
+
   getEmployees(): Observable<Employee[]> {
-    return this.http.get<Employee[]>(`${this.baseUrl}/employees`);
+    return this.http.get<Employee[]>(`${this.baseUrl}/funcionario`);
   }
   
-  getEmployee(id: string): Observable<Employee> {
-    return this.http.get<Employee>(`${this.baseUrl}/employees/${id}`);
+  getEmployee(cpf: string): Observable<Employee> {
+    return this.http.get<Employee>(`${this.baseUrl}/funcionario/${cpf}`);
   }
   
   createEmployee(emp: Omit<Employee,'id'>): Observable<Employee> {
-    return this.http.post<Employee>(`${this.baseUrl}/employees`, emp);
+    return this.http.post<Employee>(`${this.baseUrl}/funcionario`, emp);
   }
   
-  updateEmployee(id: string, emp: Partial<Omit<Employee,'id'>>): Observable<Employee> {
-    return this.http.put<Employee>(`${this.baseUrl}/employees/${id}`, emp);
+  updateEmployee(cpf: string, emp: Partial<Omit<Employee,'id'>>): Observable<Employee> {
+    return this.http.put<Employee>(`${this.baseUrl}/funcionario/${cpf}`, emp);
   }
   
-  deleteEmployee(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/employees/${id}`);
+  deleteEmployee(cpf: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/funcionario/${cpf}`);
   }
 
-  // === Vendas ===
+  // === Pedidos ===
   getSales(): Observable<Sales[]> {
-    return this.http.get<Sales[]>(`${this.baseUrl}/sales`);
+    return this.http.get<Sales[]>(`${this.baseUrl}/pedido`);
   }
 
   getSale(id: string): Observable<Sales> {
-    return this.http.get<Sales>(`${this.baseUrl}/sales/${id}`);
+    return this.http.get<Sales>(`${this.baseUrl}/pedido/${id}`);
   }
 
   createSales(sales: Omit<Sales, 'id'>): Observable<Sales> {
-    return this.http.post<Sales>(`${this.baseUrl}/sales`, sales);
+    return this.http.post<Sales>(`${this.baseUrl}/pedido`, sales);
   }
 
   updateSales(id: string, sales: Partial<Omit<Sales, 'id'>>): Observable<Sales> {
-    return this.http.put<Sales>(`${this.baseUrl}/sales/${id}`, sales);
+    return this.http.put<Sales>(`${this.baseUrl}/pedido/${id}`, sales);
   }
 
   deleteSales(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/sales/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/pedido/${id}`);
   }
 }

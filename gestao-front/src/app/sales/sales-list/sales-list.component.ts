@@ -27,7 +27,7 @@ import { ApiService } from '../../services/api.service';
 })
 export class SalesListComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
-  columns = ['name', 'actions'];
+  columns = ['valor_total', 'data_venda', 'actions'];
 
   constructor(private api: ApiService) {}
 

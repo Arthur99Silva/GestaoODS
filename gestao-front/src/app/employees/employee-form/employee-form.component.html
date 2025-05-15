@@ -4,13 +4,59 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Nome</mat-label>
-      <input matInput formControlName="name" />
+      <input matInput formControlName="nome" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>E-mail</mat-label>
       <input matInput formControlName="email" type="email" />
     </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>CPF</mat-label>
+      <input matInput formControlCpf="cpf" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Telefone</mat-label>
+      <input matInput formControlPhone="telefone" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Endereço</mat-label>
+      <input matInput formControlAddress="endereco" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Contrato</mat-label>
+      <input matInput formControlContract="contrato" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Data de Pagamento</mat-label>
+      <input matInput formControlPayday="data_pagamento" type="datetime" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Data das Férias</mat-label>
+      <input matInput formControlVacationDate="data_ferias" type="datetime" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Salário</mat-label>
+      <input matInput formControlSalary="salario" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Senha</mat-label>
+      <input matInput formControlPassword="senha" type="password"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Role</mat-label>
+      <input matInput formControlRole="role" />
+    </mat-form-field>
+
 
     <button mat-raised-button color="primary" type="submit" class="full-width">
       {{ isEdit ? 'Salvar' : 'Criar' }}

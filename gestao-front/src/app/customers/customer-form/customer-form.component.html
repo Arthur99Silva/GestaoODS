@@ -4,27 +4,27 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Nome</mat-label>
-        <input matInput formControlName="name" />
+        <input matInput formControlName="nome" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
-        <mat-label>CPF</mat-label>
-        <input matInput formControlName="cpf" />
+        <mat-label>CPF/CNPJ</mat-label>
+        <input matInput formControlCpf_Cnpj="cpf_cnpj" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>E-mail</mat-label>
-        <input matInput formControlName="email" type="email" />
+        <input matInput formControlEmail="email" type="email" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Telefone</mat-label>
-        <input matInput formControlName="phone" />
+        <input matInput formControlTelefone="telefone" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Endereço</mat-label>
-        <input matInput formControlName="address" />
+        <input matInput formControlEndereco="endereco" />
       </mat-form-field>
 
       <button mat-raised-button color="primary" type="submit" class="full-width">

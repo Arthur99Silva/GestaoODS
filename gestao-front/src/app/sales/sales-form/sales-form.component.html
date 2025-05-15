@@ -1,14 +1,38 @@
 <mat-card class="full-card">
     <h2>{{ isEdit ? 'Editar Venda' : 'Nova Venda' }}</h2>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Valor</mat-label>
-        <input matInput formControlName="value" />
+        <input matInput formControlName="valor_total" />
       </mat-form-field>
+
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Data</mat-label>
-        <input matInput formControlName="date" type="datetime" />
+        <input matInput formControlName="data_venda" type="datetime" />
       </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nota Fiscal</mat-label>
+        <input matInput formControlInvoice="nota_fiscal" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>CPF do Cliente</mat-label>
+        <input matInput formControlCpf_Client="fk_cpf_cnpj_cliente" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Pagamento</mat-label>
+        <input matInput formControlPayment="fk_forma_pagamento" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>CPF do Funcionário</mat-label>
+        <input matInput formControlCpf_Employee="fk_cpf_funcionario" />
+      </mat-form-field>
+
+
       <button mat-raised-button color="primary" type="submit" class="full-width">
         {{ isEdit ? 'Salvar' : 'Criar' }}
       </button>
