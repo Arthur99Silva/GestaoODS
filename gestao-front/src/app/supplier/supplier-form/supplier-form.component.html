@@ -1,15 +1,15 @@
 <mat-card class="full-card">
-    <h2>{{ isEdit ? 'Editar Empresa' : 'Nova Empresa' }}</h2>
+    <h2>{{ isEdit ? 'Editar Fornecedor' : 'Nova Fornecedor' }}</h2>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Nome</mat-label>
-        <input matInput formControlNome="nome" />
+        <input matInput formControlNome_Fornecedor="nome_fornecedor" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
-        <mat-label>CNPJ</mat-label>
-        <input matInput formControlCnpj="cnpj_empresa" />
+        <mat-label>CPF/CNPJ</mat-label>
+        <input matInput formControlCpf_Cnpj="cpf_cnpj" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">

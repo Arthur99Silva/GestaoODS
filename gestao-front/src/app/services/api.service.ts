@@ -31,7 +31,12 @@ export interface Sales {
 
 export interface Company {
   id: string;
-  name: string;
+  nome_empresa: string;
+  cnpj_empresa: string;
+  razao_social: string;
+  telefone: string;
+  email: string;
+  endereco: string;
 }
 
 export interface Employee {
@@ -47,6 +52,15 @@ export interface Employee {
   salario: number;
   senha: string;
   role: string;
+}
+
+export interface Supplier {
+  id: string;
+  cpf_cnpj: string;
+  nome_fornecedor: string;
+  telefone: string;
+  email: string;
+  endereco: string;
 }
 
 @Injectable({
@@ -89,23 +103,23 @@ export class ApiService {
 
   // === Empresas ===
   getCompanies(): Observable<Company[]> {
-    return this.http.get<Company[]>(`${this.baseUrl}/companies`);
+    return this.http.get<Company[]>(`${this.baseUrl}/empresa`);
   }
 
-  getCompany(id: string): Observable<Company> {
-    return this.http.get<Company>(`${this.baseUrl}/companies/${id}`);
+  getCompany(cnpj_empresa: string): Observable<Company> {
+    return this.http.get<Company>(`${this.baseUrl}/empresa/${cnpj_empresa}`);
   }
 
   createCompany(company: Omit<Company, 'id'>): Observable<Company> {
-    return this.http.post<Company>(`${this.baseUrl}/companies`, company);
+    return this.http.post<Company>(`${this.baseUrl}/empresa`, company);
   }
 
-  updateCompany(id: string, company: Partial<Omit<Company, 'id'>>): Observable<Company> {
-    return this.http.put<Company>(`${this.baseUrl}/companies/${id}`, company);
+  updateCompany(cnpj_empresa: string, company: Partial<Omit<Company, 'id'>>): Observable<Company> {
+    return this.http.put<Company>(`${this.baseUrl}/empresa/${cnpj_empresa}`, company);
   }
 
-  deleteCompany(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/companies/${id}`);
+  deleteCompany(cnpj_empresa: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/empresa/${cnpj_empresa}`);
   }
 
   // === Funcionários ===
@@ -149,5 +163,26 @@ export class ApiService {
 
   deleteSales(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/pedido/${id}`);
+  }
+
+  // === Fornecedores ===
+  getSuppliers(): Observable<Supplier[]> {
+    return this.http.get<Supplier[]>(`${this.baseUrl}/fornecedor`);
+  }
+
+  getSupplier(cpf_cnpj: string): Observable<Supplier> {
+    return this.http.get<Supplier>(`${this.baseUrl}/fornecedor/${cpf_cnpj}`);
+  }
+
+  createSupplier(supplier: Omit<Supplier, 'id'>): Observable<Supplier> {
+    return this.http.post<Supplier>(`${this.baseUrl}/fornecedor`, supplier);
+  }
+
+  updateSupplier(cpf_cnpj: string, supplier: Partial<Omit<Supplier, 'id'>>): Observable<Supplier> {
+    return this.http.put<Supplier>(`${this.baseUrl}/fornecedor/${cpf_cnpj}`, supplier);
+  }
+
+  deleteSupplier(cpf_cnpj: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/fornecedor/${cpf_cnpj}`);
   }
 }

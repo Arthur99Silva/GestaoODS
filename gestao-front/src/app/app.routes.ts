@@ -36,5 +36,9 @@ export const routes: Routes = [
   { path: 'vendas/new', loadComponent: () => import('./sales/sales-form/sales-form.component').then(m => m.SalesFormComponent) },
 
 
+  // Fornecedor
+  { path: 'fornecedor', loadComponent: () => import('./supplier/supplier-list/supplier-list.component').then(m => m.SupplierListComponent) },
+  { path: 'fornecedor/new', loadComponent: () => import('./supplier/supplier-form/supplier-form.component').then(m => m.SupplierFormComponent) },
+
   { path: '**', redirectTo: 'login', pathMatch: 'full' }
 ];
