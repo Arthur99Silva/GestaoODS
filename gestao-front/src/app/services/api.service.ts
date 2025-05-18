@@ -94,7 +94,7 @@ export class ApiService {
   }
 
   updateCustomer(cpf: string, customer: Partial<Omit<Customer, 'id'>>): Observable<Customer> {
-    return this.http.put<Customer>(`${this.baseUrl}/clientes/${cpf}`, customer);
+    return this.http.patch<Customer>(`${this.baseUrl}/clientes/${cpf}`, customer);
   }
 
   deleteCustomer(cpf: string): Observable<void> {
@@ -115,7 +115,7 @@ export class ApiService {
   }
 
   updateCompany(cnpj_empresa: string, company: Partial<Omit<Company, 'id'>>): Observable<Company> {
-    return this.http.put<Company>(`${this.baseUrl}/empresa/${cnpj_empresa}`, company);
+    return this.http.patch<Company>(`${this.baseUrl}/empresa/${cnpj_empresa}`, company);
   }
 
   deleteCompany(cnpj_empresa: string): Observable<void> {
@@ -137,7 +137,7 @@ export class ApiService {
   }
   
   updateEmployee(cpf: string, emp: Partial<Omit<Employee,'id'>>): Observable<Employee> {
-    return this.http.put<Employee>(`${this.baseUrl}/funcionario/${cpf}`, emp);
+    return this.http.patch<Employee>(`${this.baseUrl}/funcionario/${cpf}`, emp);
   }
   
   deleteEmployee(cpf: string): Observable<void> {
@@ -158,7 +158,7 @@ export class ApiService {
   }
 
   updateSales(id: string, sales: Partial<Omit<Sales, 'id'>>): Observable<Sales> {
-    return this.http.put<Sales>(`${this.baseUrl}/pedido/${id}`, sales);
+    return this.http.patch<Sales>(`${this.baseUrl}/pedido/${id}`, sales);
   }
 
   deleteSales(id: string): Observable<void> {
@@ -179,7 +179,7 @@ export class ApiService {
   }
 
   updateSupplier(cpf_cnpj: string, supplier: Partial<Omit<Supplier, 'id'>>): Observable<Supplier> {
-    return this.http.put<Supplier>(`${this.baseUrl}/fornecedor/${cpf_cnpj}`, supplier);
+    return this.http.patch<Supplier>(`${this.baseUrl}/fornecedor/${cpf_cnpj}`, supplier);
   }
 
   deleteSupplier(cpf_cnpj: string): Observable<void> {

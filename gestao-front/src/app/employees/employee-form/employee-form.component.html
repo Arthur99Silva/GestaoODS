@@ -14,47 +14,47 @@
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>CPF</mat-label>
-      <input matInput formControlCpf="cpf" />
+      <input matInput formControlName="cpf" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Telefone</mat-label>
-      <input matInput formControlPhone="telefone" />
+      <input matInput formControlName="telefone" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Endereço</mat-label>
-      <input matInput formControlAddress="endereco" />
+      <input matInput formControlName="endereco" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Contrato</mat-label>
-      <input matInput formControlContract="contrato" />
+      <input matInput formControlName="contrato" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Data de Pagamento</mat-label>
-      <input matInput formControlPayday="data_pagamento" type="datetime" />
+      <input matInput formControlName="data_pagamento" type="datetime" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Data das Férias</mat-label>
-      <input matInput formControlVacationDate="data_ferias" type="datetime" />
+      <input matInput formControlName="data_ferias" type="datetime" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Salário</mat-label>
-      <input matInput formControlSalary="salario" />
+      <input matInput formControlName="salario" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Senha</mat-label>
-      <input matInput formControlPassword="senha" type="password"/>
+      <input matInput formControlName="senha" type="password"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Role</mat-label>
-      <input matInput formControlRole="role" />
+      <input matInput formControlName="role" />
     </mat-form-field>
 
 
@@ -62,8 +62,4 @@
       {{ isEdit ? 'Salvar' : 'Criar' }}
     </button>
   </form>
-
-  <button mat-button routerLink="/employees">
-    ← Voltar
-  </button>
 </mat-card>

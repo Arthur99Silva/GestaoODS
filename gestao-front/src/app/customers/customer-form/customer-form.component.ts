@@ -30,7 +30,7 @@ import { ApiService, Customer } from '../../services/api.service';
 export class CustomerFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
-  private id?: string;
+  private cpf_cnpj?: string;
 
   constructor(
     private fb: FormBuilder,
@@ -41,14 +41,17 @@ export class CustomerFormComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]]
+      nome: ['', Validators.required],
+      cpf_cnpj: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      telefone: ['', Validators.required],
+      endereco: ['', Validators.required]
     });
 
-    this.id = this.route.snapshot.paramMap.get('id') || undefined;
-    if (this.id) {
+    this.cpf_cnpj = this.route.snapshot.paramMap.get('cpf_cnpj') || undefined;
+    if (this.cpf_cnpj) {
       this.isEdit = true;
-      this.api.getCustomer(this.id).subscribe(cust => {
+      this.api.getCustomer(this.cpf_cnpj).subscribe(cust => {
         this.form.patchValue(cust);
       });
     }
@@ -61,7 +64,7 @@ export class CustomerFormComponent implements OnInit {
       return;
     }
     const obs = this.isEdit
-      ? this.api.updateCustomer(this.id!, this.form.value)
+      ? this.api.updateCustomer(this.cpf_cnpj!, this.form.value)
       : this.api.createCustomer(this.form.value);
 
     obs.subscribe({

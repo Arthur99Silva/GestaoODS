@@ -30,7 +30,7 @@ import { ApiService, Supplier } from '../../services/api.service';
 export class SupplierFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
-  private id?: string;
+  private cpf_cnpj?: string;
 
   constructor(
     private fb: FormBuilder,
@@ -41,13 +41,17 @@ export class SupplierFormComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      name: ['', Validators.required]
+      nome_fornecedor: ['', Validators.required],
+      cpf_cnpj: ['', Validators.required],
+      email: ['', Validators.required, Validators.email],
+      telefone: ['', Validators.required],
+      endereco: ['', Validators.required]
     });
 
-    this.id = this.route.snapshot.paramMap.get('id') || undefined;
-    if (this.id) {
+    this.cpf_cnpj = this.route.snapshot.paramMap.get('cpf_cnpj') || undefined;
+    if (this.cpf_cnpj) {
       this.isEdit = true;
-      this.api.getSupplier(this.id).subscribe(comp => {
+      this.api.getSupplier(this.cpf_cnpj).subscribe(comp => {
         this.form.patchValue(comp);
       });
     }
@@ -60,7 +64,7 @@ export class SupplierFormComponent implements OnInit {
       return;
     }
     const obs = this.isEdit
-      ? this.api.updateSupplier(this.id!, this.form.value)
+      ? this.api.updateSupplier(this.cpf_cnpj!, this.form.value)
       : this.api.createSupplier(this.form.value);
 
     obs.subscribe({

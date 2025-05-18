@@ -4,27 +4,32 @@
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Nome</mat-label>
-        <input matInput formControlNome="nome" />
+        <input matInput formControlName="nome_empresa" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>CNPJ</mat-label>
-        <input matInput formControlCnpj="cnpj_empresa" />
+        <input matInput formControlName="cnpj_empresa" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Razão Social</mat-label>
+        <input matInput formControlName="razao_social" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>E-mail</mat-label>
-        <input matInput formControlEmail="email" type="email" />
+        <input matInput formControlName="email" type="email" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Telefone</mat-label>
-        <input matInput formControlTelefone="telefone" />
+        <input matInput formControlName="telefone" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Endereço</mat-label>
-        <input matInput formControlEndereco="endereco" />
+        <input matInput formControlName="endereco" />
       </mat-form-field>
 
       <button mat-raised-button color="primary" type="submit" class="full-width">

@@ -36,25 +36,44 @@ export class EmployeeFormComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]]
+      nome: ['', Validators.required],
+      email: ['', Validators.required, Validators.email],
+      cpf: ['', Validators.required],
+      telefone: ['', Validators.required],
+      endereco: ['', Validators.required],
+      contrato: ['', Validators.required],
+      data_pagamento: ['', Validators.required],
+      data_ferias: ['', Validators.required],
+      salario: ['', Validators.required],
+      senha: ['', Validators.required],
+      role: ['', Validators.required]
     });
 
     this.id = this.route.snapshot.paramMap.get('id') || undefined;
     if (this.id) {
       this.isEdit = true;
-      this.api.getEmployee(this.id).subscribe(emp => this.form.patchValue(emp));
+      this.api.getEmployee(this.id).subscribe(cust => {
+        this.form.patchValue(cust);
+      });
     }
   }
 
   onSubmit() {
-    if (this.form.invalid) return;
-    const obs = this.isEdit
-      ? this.api.updateEmployee(this.id!, this.form.value)
-      : this.api.createEmployee(this.form.value);
-    obs.subscribe({
-      next: () => this.router.navigate(['/employees']),
-      error: err => console.error('Erro:', err)
-    });
-  }
+      console.log('onSubmit chamado:', this.form.value);
+      if (this.form.invalid) {
+        console.warn('Form inválido', this.form.errors);
+        return;
+      }
+      const obs = this.isEdit
+        ? this.api.updateEmployee(this.id!, this.form.value)
+        : this.api.createEmployee(this.form.value);
+  
+      obs.subscribe({
+        next: (funcionario: Employee) => {
+          console.log('Funcionario salvo com sucesso', funcionario);
+          this.router.navigate(['/funcionario']);
+        },
+        error: err => console.error('Erro ao salvar funcionario:', err)
+      });
+    }
 }

@@ -4,14 +4,35 @@
       <button mat-raised-button color="primary" routerLink="/fornecedor/new">Novo Fornecedor</button>
     </div>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 full-table">
-      <ng-container matColumnDef="name">
+      <ng-container matColumnDef="nome_fornecedor">
         <th mat-header-cell *matHeaderCellDef>Nome</th>
-        <td mat-cell *matCellDef="let f">{{ f.name }}</td>
+        <td mat-cell *matCellDef="let f">{{ f.nome_fornecedor }}</td>
       </ng-container>
+
+      <ng-container matColumnDef="cpf_cnpj">
+        <th mat-header-cell *matHeaderCellDef>CPF/CNPJ</th>
+        <td mat-cell *matCellDef="let f">{{ f.cpf_cnpj }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let f">{{ f.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="telefone">
+        <th mat-header-cell *matHeaderCellDef>Telefone</th>
+        <td mat-cell *matCellDef="let f">{{ f.telefone }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="endereco">
+        <th mat-header-cell *matHeaderCellDef>Endereço</th>
+        <td mat-cell *matCellDef="let f">{{ f.endereco }}</td>
+      </ng-container>
+
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Ações</th>
         <td mat-cell *matCellDef="let f">
-          <button mat-icon-button [routerLink]="['/fornecedor', f.id]">
+          <button mat-icon-button [routerLink]="['/fornecedor', f.cpf_cnpj]">
             <mat-icon>edit</mat-icon>
           </button>
         </td>

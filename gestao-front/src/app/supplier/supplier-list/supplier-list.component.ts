@@ -27,12 +27,12 @@ import { ApiService } from '../../services/api.service';
 })
 export class SupplierListComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
-  columns = ['name', 'actions'];
+  columns = ['nome_fornecedor', 'cpf_cnpj', 'email', 'telefone', 'endereco', 'actions'];
 
   constructor(private api: ApiService) {}
 
   ngOnInit() {
-    this.api.getCompanies().subscribe(list => {
+    this.api.getSuppliers().subscribe(list => {
       this.dataSource.data = list;
     });
   }

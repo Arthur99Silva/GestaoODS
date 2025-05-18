@@ -30,7 +30,7 @@ import { ApiService, Company } from '../../services/api.service';
 export class CompanyFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
-  private id?: string;
+  private cnpj_empresa?: string;
 
   constructor(
     private fb: FormBuilder,
@@ -41,13 +41,18 @@ export class CompanyFormComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      name: ['', Validators.required]
+      nome_empresa: ['', Validators.required],
+      cnpj_empresa: ['', Validators.required],
+      razao_social: ['', Validators.required],
+      email: ['', Validators.required, Validators.email],
+      telefone: ['', Validators.required],
+      endereco: ['', Validators.required]
     });
 
-    this.id = this.route.snapshot.paramMap.get('id') || undefined;
-    if (this.id) {
+    this.cnpj_empresa = this.route.snapshot.paramMap.get('cnpj_empresa') || undefined;
+    if (this.cnpj_empresa) {
       this.isEdit = true;
-      this.api.getCompany(this.id).subscribe(comp => {
+      this.api.getCompany(this.cnpj_empresa).subscribe(comp => {
         this.form.patchValue(comp);
       });
     }
@@ -60,7 +65,7 @@ export class CompanyFormComponent implements OnInit {
       return;
     }
     const obs = this.isEdit
-      ? this.api.updateCompany(this.id!, this.form.value)
+      ? this.api.updateCompany(this.cnpj_empresa!, this.form.value)
       : this.api.createCompany(this.form.value);
 
     obs.subscribe({

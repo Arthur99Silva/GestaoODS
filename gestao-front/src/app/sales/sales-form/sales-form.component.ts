@@ -41,7 +41,12 @@ export class SalesFormComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      name: ['', Validators.required]
+      valor_total: ['', Validators.required],
+      data_venda: ['', Validators.required],
+      nota_fiscal: ['', Validators.required],
+      fk_cpf_cnpj_cliente: ['', Validators.required],
+      fk_forma_pagamento: ['', Validators.required],
+      fk_cpf_funcionario: ['', Validators.required]
     });
 
     this.id = this.route.snapshot.paramMap.get('id') || undefined;

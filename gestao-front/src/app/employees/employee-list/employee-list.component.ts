@@ -23,7 +23,7 @@ import { ApiService, Employee } from '../../services/api.service';
 })
 export class EmployeeListComponent implements OnInit {
   dataSource = new MatTableDataSource<Employee>();
-  columns = ['name', 'email', 'actions'];
+  columns = ['nome', 'email', 'cpf', 'telefone', 'endereco', 'contrato', 'data_pagamento', 'data_ferias', 'salario', 'role', 'actions'];
 
   constructor(private api: ApiService) {}
 
