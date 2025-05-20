@@ -8,8 +8,13 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Data</mat-label>
-        <input matInput formControlName="data_venda" type="datetime" />
+        <mat-label>Data da Venda</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="data_venda">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="form.get('data_venda')?.hasError('required')">
+          Data da venda é obrigatória
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">

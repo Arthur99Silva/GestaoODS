@@ -10,8 +10,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService, Sales } from '../../services/api.service';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { DateAdapter } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   standalone: true,
@@ -24,7 +29,13 @@ import { ApiService, Sales } from '../../services/api.service';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDatepickerModule,
+    MatIconModule
+  ],
+  providers: [
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
   ]
 })
 export class SalesFormComponent implements OnInit {
@@ -36,8 +47,11 @@ export class SalesFormComponent implements OnInit {
     private fb: FormBuilder,
     private api: ApiService,
     private router: Router,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private dateAdapter: DateAdapter<Date>
+  ) {
+    this.dateAdapter.setLocale('pt-BR');
+  }
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -51,33 +65,40 @@ export class SalesFormComponent implements OnInit {
 
     this.id = this.route.snapshot.paramMap.get('id') || undefined;
     if (this.id) {
-  this.isEdit = true;
-  this.api.getSale(this.id).subscribe(comp => {
-    console.log(comp);
+      this.isEdit = true;
+      this.api.getSale(this.id).subscribe(comp => {
+        console.log(comp);
 
-    this.form.patchValue({
-      ...comp,
-      fk_cpf_cnpj_cliente: comp.cliente?.cpf_cnpj,
-      fk_cpf_funcionario: comp.funcionario?.cpf,
-      fk_forma_pagamento: comp.forma_pagamento?.id_forma_pagamento,
-      valor_total: String(comp.valor_total),  // if your form uses string inputs
-      data_venda: comp.data_venda?.slice(0, 10) // optional: trim date to yyyy-mm-dd
-    });
-  });
-}
+        let saleDate = comp.data_venda ? this.parseBackendDate(comp.data_venda) : null;
+
+        this.form.patchValue({
+          ...comp,
+          fk_cpf_cnpj_cliente: comp.cliente?.cpf_cnpj,
+          fk_cpf_funcionario: comp.funcionario?.cpf,
+          fk_forma_pagamento: comp.forma_pagamento?.id_forma_pagamento,
+          valor_total: String(comp.valor_total),
+          data_venda: saleDate
+        });
+      });
+    }
   }
 
   onSubmit() {
-    this.form.value.valor_total = parseFloat(this.form.value.valor_total);
-    this.form.value.fk_forma_pagamento = parseInt(this.form.value.fk_forma_pagamento);
-    console.log('onSubmit sales:', this.form.value);
     if (this.form.invalid) {
       console.warn('Form inválido', this.form.errors);
       return;
     }
+
+    const formData = {
+      ...this.form.value,
+      valor_total: parseFloat(this.form.value.valor_total),
+      fk_forma_pagamento: parseInt(this.form.value.fk_forma_pagamento),
+      data_venda: this.convertToBackendFormat(this.form.value.data_venda)
+    };
+
     const obs = this.isEdit
-      ? this.api.updateSales(this.id!, this.form.value)
-      : this.api.createSales(this.form.value);
+      ? this.api.updateSales(this.id!, formData)
+      : this.api.createSales(formData);
 
     obs.subscribe({
       next: (venda: Sales) => {
@@ -87,4 +108,32 @@ export class SalesFormComponent implements OnInit {
       error: err => console.error('Erro ao salvar venda:', err)
     });
   }
+
+
+  private parseBackendDate(isoString: string): Date {
+    // Parse the ISO string but ignore timezone (treat as local date)
+    const date = new Date(isoString);
+    return new Date(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate()
+    );
+  }
+
+  private convertToBackendFormat(date: Date): string {
+    if (!date) return '';
+    
+    // Create date in UTC to avoid timezone shifts
+    const utcDate = new Date(
+      Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        0, 0, 0, 0
+      )
+    );
+    
+    return utcDate.toISOString();
+  }
+
 }
