@@ -25,7 +25,7 @@ import { ApiService, Employee } from '../../services/api.service';
 export class EmployeeFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
-  private id?: string;
+  private cpf?: string;
 
   constructor(
     private fb: FormBuilder,
@@ -37,7 +37,7 @@ export class EmployeeFormComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       nome: ['', Validators.required],
-      email: ['', Validators.required, Validators.email],
+      email: ['', [Validators.required, Validators.email]],
       cpf: ['', Validators.required],
       telefone: ['', Validators.required],
       endereco: ['', Validators.required],
@@ -49,23 +49,24 @@ export class EmployeeFormComponent implements OnInit {
       role: ['', Validators.required]
     });
 
-    this.id = this.route.snapshot.paramMap.get('id') || undefined;
-    if (this.id) {
+    this.cpf = this.route.snapshot.paramMap.get('cpf') || undefined;
+    if (this.cpf) {
       this.isEdit = true;
-      this.api.getEmployee(this.id).subscribe(cust => {
+      this.api.getEmployee(this.cpf).subscribe(cust => {
         this.form.patchValue(cust);
       });
     }
   }
 
   onSubmit() {
+      this.form.value.salario = parseFloat(this.form.value.salario);
       console.log('onSubmit chamado:', this.form.value);
       if (this.form.invalid) {
         console.warn('Form inválido', this.form.errors);
         return;
       }
       const obs = this.isEdit
-        ? this.api.updateEmployee(this.id!, this.form.value)
+        ? this.api.updateEmployee(this.cpf!, this.form.value)
         : this.api.createEmployee(this.form.value);
   
       obs.subscribe({

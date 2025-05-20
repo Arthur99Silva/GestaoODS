@@ -43,16 +43,17 @@ export class CompanyFormComponent implements OnInit {
     this.form = this.fb.group({
       nome_empresa: ['', Validators.required],
       cnpj_empresa: ['', Validators.required],
+      endereco: ['', Validators.required],
       razao_social: ['', Validators.required],
-      email: ['', Validators.required, Validators.email],
-      telefone: ['', Validators.required],
-      endereco: ['', Validators.required]
+      email: ['', [Validators.required, Validators.email]],
+      telefone: ['', Validators.required]
     });
 
     this.cnpj_empresa = this.route.snapshot.paramMap.get('cnpj_empresa') || undefined;
     if (this.cnpj_empresa) {
       this.isEdit = true;
       this.api.getCompany(this.cnpj_empresa).subscribe(comp => {
+        console.log(comp);
         this.form.patchValue(comp);
       });
     }
@@ -71,7 +72,7 @@ export class CompanyFormComponent implements OnInit {
     obs.subscribe({
       next: (empresa: Company) => {
         console.log('Empresa salva com sucesso', empresa);
-        this.router.navigate(['/empresas']);
+        this.router.navigate(['/empresa']);
       },
       error: err => console.error('Erro ao salvar empresa:', err)
     });

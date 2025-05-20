@@ -43,10 +43,12 @@ export class SupplierFormComponent implements OnInit {
     this.form = this.fb.group({
       nome_fornecedor: ['', Validators.required],
       cpf_cnpj: ['', Validators.required],
-      email: ['', Validators.required, Validators.email],
+      email: ['', [Validators.required, Validators.email]],
       telefone: ['', Validators.required],
       endereco: ['', Validators.required]
     });
+
+    console.log(this.route.snapshot.paramMap.get('cpf_cnpj'));
 
     this.cpf_cnpj = this.route.snapshot.paramMap.get('cpf_cnpj') || undefined;
     if (this.cpf_cnpj) {

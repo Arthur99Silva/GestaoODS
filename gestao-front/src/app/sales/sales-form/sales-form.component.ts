@@ -59,6 +59,8 @@ export class SalesFormComponent implements OnInit {
   }
 
   onSubmit() {
+    this.form.value.valor_total = parseFloat(this.form.value.valor_total);
+    this.form.value.fk_forma_pagamento = parseInt(this.form.value.fk_forma_pagamento);
     console.log('onSubmit sales:', this.form.value);
     if (this.form.invalid) {
       console.warn('Form inválido', this.form.errors);

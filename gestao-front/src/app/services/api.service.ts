@@ -56,7 +56,7 @@ export interface Employee {
 
 export interface Supplier {
   id: string;
-  cpf_cnpj: string;
+  cpf_cnpj_fornecedor: string;
   nome_fornecedor: string;
   telefone: string;
   email: string;
@@ -170,19 +170,19 @@ export class ApiService {
     return this.http.get<Supplier[]>(`${this.baseUrl}/fornecedor`);
   }
 
-  getSupplier(cpf_cnpj: string): Observable<Supplier> {
-    return this.http.get<Supplier>(`${this.baseUrl}/fornecedor/${cpf_cnpj}`);
+  getSupplier(cpf_cnpj_fornecedor: string): Observable<Supplier> {
+    return this.http.get<Supplier>(`${this.baseUrl}/fornecedor/${cpf_cnpj_fornecedor}`);
   }
 
   createSupplier(supplier: Omit<Supplier, 'id'>): Observable<Supplier> {
     return this.http.post<Supplier>(`${this.baseUrl}/fornecedor`, supplier);
   }
 
-  updateSupplier(cpf_cnpj: string, supplier: Partial<Omit<Supplier, 'id'>>): Observable<Supplier> {
-    return this.http.patch<Supplier>(`${this.baseUrl}/fornecedor/${cpf_cnpj}`, supplier);
+  updateSupplier(cpf_cnpj_fornecedor: string, supplier: Partial<Omit<Supplier, 'id'>>): Observable<Supplier> {
+    return this.http.patch<Supplier>(`${this.baseUrl}/fornecedor/${cpf_cnpj_fornecedor}`, supplier);
   }
 
-  deleteSupplier(cpf_cnpj: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/fornecedor/${cpf_cnpj}`);
+  deleteSupplier(cpf_cnpj_fornecedor: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/fornecedor/${cpf_cnpj_fornecedor}`);
   }
 }

@@ -15,9 +15,9 @@ export const routes: Routes = [
   { path: 'clientes/:cpf_cnpj', loadComponent: () => import('./customers/customer-form/customer-form.component').then(m => m.CustomerFormComponent) },
 
   // Empresas
-  { path: 'empresas', loadComponent: () => import('./companies/company-list/company-list.component').then(m => m.CompanyListComponent) },
-  { path: 'empresas/new', loadComponent: () => import('./companies/company-form/company-form.component').then(m => m.CompanyFormComponent) },
-  { path: 'empresas/:cnpj_empresa', loadComponent: () => import('./companies/company-form/company-form.component').then(m => m.CompanyFormComponent) },
+  { path: 'empresa', loadComponent: () => import('./companies/company-list/company-list.component').then(m => m.CompanyListComponent) },
+  { path: 'empresa/new', loadComponent: () => import('./companies/company-form/company-form.component').then(m => m.CompanyFormComponent) },
+  { path: 'empresa/:cnpj_empresa', loadComponent: () => import('./companies/company-form/company-form.component').then(m => m.CompanyFormComponent) },
 
   // Funcionários
   {
@@ -29,7 +29,7 @@ export const routes: Routes = [
     loadComponent: () => import('./employees/employee-form/employee-form.component').then(m => m.EmployeeFormComponent)
   },
   {
-    path: 'funcionario/:id',
+    path: 'funcionario/:cpf',
     loadComponent: () => import('./employees/employee-form/employee-form.component').then(m => m.EmployeeFormComponent)
   },
 
