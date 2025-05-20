@@ -17,7 +17,7 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Ações</th>
         <td mat-cell *matCellDef="let s">
-          <button mat-icon-button [routerLink]="['/vendas', s.id]">
+          <button mat-icon-button [routerLink]="['/vendas', s.id_pedido]">
             <mat-icon>edit</mat-icon>
           </button>
         </td>

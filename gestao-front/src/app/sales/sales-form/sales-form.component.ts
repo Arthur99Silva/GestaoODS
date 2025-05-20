@@ -51,11 +51,20 @@ export class SalesFormComponent implements OnInit {
 
     this.id = this.route.snapshot.paramMap.get('id') || undefined;
     if (this.id) {
-      this.isEdit = true;
-      this.api.getSale(this.id).subscribe(comp => {
-        this.form.patchValue(comp);
-      });
-    }
+  this.isEdit = true;
+  this.api.getSale(this.id).subscribe(comp => {
+    console.log(comp);
+
+    this.form.patchValue({
+      ...comp,
+      fk_cpf_cnpj_cliente: comp.cliente?.cpf_cnpj,
+      fk_cpf_funcionario: comp.funcionario?.cpf,
+      fk_forma_pagamento: comp.forma_pagamento?.id_forma_pagamento,
+      valor_total: String(comp.valor_total),  // if your form uses string inputs
+      data_venda: comp.data_venda?.slice(0, 10) // optional: trim date to yyyy-mm-dd
+    });
+  });
+}
   }
 
   onSubmit() {

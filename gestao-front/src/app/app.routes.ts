@@ -36,6 +36,7 @@ export const routes: Routes = [
   // Vendas
   { path: 'vendas', loadComponent: () => import('./sales/sales-list/sales-list.component').then(m => m.SalesListComponent) },
   { path: 'vendas/new', loadComponent: () => import('./sales/sales-form/sales-form.component').then(m => m.SalesFormComponent) },
+  { path: 'vendas/:id', loadComponent: () => import('./sales/sales-form/sales-form.component').then(m => m.SalesFormComponent) },
 
 
   // Fornecedor

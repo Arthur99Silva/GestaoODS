@@ -54,7 +54,7 @@ export class PedidoService {
   async findOne(id_pedido: number): Promise<Pedido> {
     const pedido = await this.pedidoRepository.findOne({
       where: { id_pedido },
-      relations: ['Cliente', 'funcionario', 'forma_pagamento', 'itensProduto'],
+      relations: ['cliente', 'funcionario', 'forma_pagamento', 'itensProduto'],
     });
 
     if (!pedido) {

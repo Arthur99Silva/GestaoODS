@@ -33,6 +33,7 @@ export class SalesListComponent implements OnInit {
 
   ngOnInit() {
     this.api.getSales().subscribe(list => {
+      console.log(list);
       this.dataSource.data = list;
     });
   }

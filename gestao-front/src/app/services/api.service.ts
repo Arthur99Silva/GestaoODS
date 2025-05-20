@@ -27,6 +27,24 @@ export interface Sales {
   fk_cpf_cnpj_cliente: string;
   fk_forma_pagamento: number;
   fk_cpf_funcionario: string;
+  cliente: {
+    cpf_cnpj: string;
+    nome: string;
+    email: string;
+    telefone: string;
+    endereco: string;
+  };
+  funcionario: {
+    cpf: string;
+    nome: string;
+    telefone: string;
+    email: string;
+    endereco: string;
+  };
+  forma_pagamento: {
+    id_forma_pagamento: number;
+    nome_forma_pagamento: string;
+  };
 }
 
 export interface Company {
