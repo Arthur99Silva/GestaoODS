@@ -23,20 +23,40 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
-        <mat-label>CPF do Cliente</mat-label>
-        <input matInput formControlName="fk_cpf_cnpj_cliente" />
+        <mat-label>Cliente</mat-label>
+        <mat-select formControlName="fk_cpf_cnpj_cliente" required>
+          <mat-option *ngFor="let customer of customers" [value]="customer.cpf_cnpj">
+            {{ customer.nome }} (CPF: {{ customer.cpf_cnpj }})
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('fk_cpf_cnpj_cliente')?.hasError('required')">
+          Cliente é obrigatório
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Pagamento</mat-label>
-        <input matInput formControlName="fk_forma_pagamento" type="number" />
+        <mat-label>Forma de Pagamento</mat-label>
+        <mat-select formControlName="fk_forma_pagamento" required>
+          <mat-option *ngFor="let payment of payment_methods" [value]="payment.id_forma_pagamento">
+            {{ payment.nome_forma_pagamento }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('fk_forma_pagamento')?.hasError('required')">
+          Forma de pagamento é obrigatória
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
-        <mat-label>CPF do Funcionário</mat-label>
-        <input matInput formControlName="fk_cpf_funcionario" />
+        <mat-label>Funcionário</mat-label>
+        <mat-select formControlName="fk_cpf_funcionario" required>
+          <mat-option *ngFor="let employee of employees" [value]="employee.cpf">
+            {{ employee.nome }} (CPF: {{ employee.cpf }})
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('fk_cpf_funcionario')?.hasError('required')">
+          Funcionário é obrigatório
+        </mat-error>
       </mat-form-field>
-
 
       <button mat-raised-button color="primary" type="submit" class="full-width">
         {{ isEdit ? 'Salvar' : 'Criar' }}

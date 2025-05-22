@@ -11,8 +11,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ApiService, Sales } from '../../services/api.service';
+import { ApiService, Sales, Customer, Employee, Payment } from '../../services/api.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { DateAdapter } from '@angular/material/core';
@@ -31,7 +32,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatButtonModule,
     MatDatepickerModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -42,6 +44,11 @@ export class SalesFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
   private id?: string;
+
+  // Dropdown options
+  customers: Customer[] = [];
+  payment_methods: Payment[] = [];
+  employees: Employee[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -63,12 +70,15 @@ export class SalesFormComponent implements OnInit {
       fk_cpf_funcionario: ['', Validators.required]
     });
 
+    // Load dropdown data
+    this.loadCustomers();
+    this.loadPaymentMethods();
+    this.loadEmployees();
+
     this.id = this.route.snapshot.paramMap.get('id') || undefined;
     if (this.id) {
       this.isEdit = true;
       this.api.getSale(this.id).subscribe(comp => {
-        console.log(comp);
-
         let saleDate = comp.data_venda ? this.parseBackendDate(comp.data_venda) : null;
 
         this.form.patchValue({
@@ -83,6 +93,35 @@ export class SalesFormComponent implements OnInit {
     }
   }
 
+  // Load dropdown data methods
+  private loadCustomers() {
+    this.api.getCustomers().subscribe({
+      next: (customers) => {
+        this.customers = customers;
+      },
+      error: (err) => console.error('Erro ao carregar customers:', err)
+    });
+  }
+
+  private loadPaymentMethods() {
+    this.api.getPayments().subscribe({
+      next: (payments) => {
+        this.payment_methods = payments;
+      },
+      error: (err) => console.error('Erro ao carregar formas de pagamento:', err)
+    });
+  }
+
+  private loadEmployees() {
+    this.api.getEmployees().subscribe({
+      next: (employees) => {
+        this.employees = employees;
+      },
+      error: (err) => console.error('Erro ao carregar funcionários:', err)
+    });
+  }
+
+  // Rest of your existing methods...
   onSubmit() {
     if (this.form.invalid) {
       console.warn('Form inválido', this.form.errors);
@@ -109,9 +148,7 @@ export class SalesFormComponent implements OnInit {
     });
   }
 
-
   private parseBackendDate(isoString: string): Date {
-    // Parse the ISO string but ignore timezone (treat as local date)
     const date = new Date(isoString);
     return new Date(
       date.getUTCFullYear(),
@@ -123,7 +160,6 @@ export class SalesFormComponent implements OnInit {
   private convertToBackendFormat(date: Date): string {
     if (!date) return '';
     
-    // Create date in UTC to avoid timezone shifts
     const utcDate = new Date(
       Date.UTC(
         date.getFullYear(),
@@ -135,5 +171,4 @@ export class SalesFormComponent implements OnInit {
     
     return utcDate.toISOString();
   }
-
 }

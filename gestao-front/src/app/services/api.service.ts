@@ -1,7 +1,7 @@
 // src/app/services/api.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { delay, Observable, of } from 'rxjs';
 
 export interface User {
   id?: string;
@@ -79,6 +79,11 @@ export interface Supplier {
   telefone: string;
   email: string;
   endereco: string;
+}
+
+export interface Payment {
+  id_forma_pagamento: string;
+  nome_forma_pagamento: string;
 }
 
 @Injectable({
@@ -203,4 +208,22 @@ export class ApiService {
   deleteSupplier(cpf_cnpj_fornecedor: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/fornecedor/${cpf_cnpj_fornecedor}`);
   }
+
+  // Forma Pagamento
+  getPayments(): Observable<Payment[]> {
+    //return this.http.get<Payment[]>(`${this.baseUrl}/pagamento}`);
+    // Mock data
+    const mockPayments: Payment[] = [
+      { id_forma_pagamento: '1', nome_forma_pagamento: 'Cartão de Crédito' },
+      { id_forma_pagamento: '2', nome_forma_pagamento: 'Cartão de Débito' },
+      { id_forma_pagamento: '3', nome_forma_pagamento: 'Dinheiro' },
+      { id_forma_pagamento: '4', nome_forma_pagamento: 'PIX' },
+      { id_forma_pagamento: '5', nome_forma_pagamento: 'Boleto Bancário' },
+      { id_forma_pagamento: '6', nome_forma_pagamento: 'Transferência Bancária' }
+    ];
+
+    // Simulate API delay
+    return of(mockPayments).pipe(delay(500));
+  }
+
 }
