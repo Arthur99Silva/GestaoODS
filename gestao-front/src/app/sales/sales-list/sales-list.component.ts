@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 
+import { DateFormatPipe } from '../../pipes/date-format.pipe';
+
 @Component({
   standalone: true,
   selector: 'app-sales-list',
@@ -22,12 +24,13 @@ import { ApiService } from '../../services/api.service';
     MatTableModule,
     MatButtonModule,
     MatIconModule,
-    RouterLink
+    RouterLink,
+    DateFormatPipe // Add the pipe here
   ]
 })
 export class SalesListComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
-  columns = ['valor_total', 'data_venda', 'actions'];
+  columns = ['valor_total', 'data_venda', 'nota_fiscal', 'fk_cpf_cnpj_cliente', 'nome_forma_pagamento', 'fk_cpf_funcionario', 'actions'];
 
   constructor(private api: ApiService) {}
 
