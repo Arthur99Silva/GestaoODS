@@ -2,3 +2,11 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* src/styles.css */
+body {
+    margin-top: 64px; /* Altura do header */
+  }
+  
+  .content {
+    padding: 2rem;
+  }

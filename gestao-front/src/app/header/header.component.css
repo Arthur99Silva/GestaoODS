@@ -1,0 +1,43 @@
+/* src/app/components/header/header.component.css */
+.header-toolbar {
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 2rem;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+  margin-right: 2rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  flex-grow: 1;
+}
+
+.menu-group {
+  position: relative;
+}
+
+.user-actions {
+  margin-left: auto;
+}
+
+.active-link {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
