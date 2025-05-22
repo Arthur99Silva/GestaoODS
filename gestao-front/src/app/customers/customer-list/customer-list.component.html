@@ -49,4 +49,10 @@
       <tr mat-header-row *matHeaderRowDef="columns"></tr>
       <tr mat-row *matRowDef="let row; columns: columns"></tr>
     </table>
+
+      <!-- Pagination control -->
+  <mat-paginator [pageSizeOptions]="[10, 20, 50]" 
+                 showFirstLastButtons 
+                 aria-label="Select page of sales">
+  </mat-paginator>
   </mat-card>

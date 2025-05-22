@@ -11,3 +11,17 @@
   .full-table {
     width: 100%;
   }
+
+.mat-paginator {
+  background: transparent;
+  margin-top: 16px;
+}
+
+.full-table {
+  width: 100%;
+}
+
+.list-card {
+  padding: 20px;
+  margin: 20px;
+}

@@ -1,12 +1,14 @@
+<!-- src/app/companies/sales-list/sales-list.component.html -->
 <mat-card class="list-card">
   <div class="header">
     <h2>Vendas</h2>
     <button mat-raised-button color="primary" routerLink="/vendas/new">Nova Venda</button>
   </div>
+
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 full-table">
     <ng-container matColumnDef="valor_total">
       <th mat-header-cell *matHeaderCellDef>Valor</th>
-      <td mat-cell *matCellDef="let s">{{ s.valor_total | currency:'BRL':'symbol':'1.2-2' }}</td>
+      <td mat-cell *matCellDef="let sale">{{ sale.valor_total | currency:'BRL':'symbol':'1.2-2' }}</td>
     </ng-container>
 
     <ng-container matColumnDef="data_venda">
@@ -16,34 +18,40 @@
 
     <ng-container matColumnDef="nota_fiscal">
       <th mat-header-cell *matHeaderCellDef>Nota Fiscal</th>
-      <td mat-cell *matCellDef="let s">{{ s.nota_fiscal }}</td>
+      <td mat-cell *matCellDef="let sale">{{ sale.nota_fiscal }}</td>
     </ng-container>
 
     <ng-container matColumnDef="fk_cpf_cnpj_cliente">
       <th mat-header-cell *matHeaderCellDef>CPF do Cliente</th>
-      <td mat-cell *matCellDef="let s">{{ s.cliente.cpf_cnpj }}</td>
+      <td mat-cell *matCellDef="let sale">{{ sale.cliente?.cpf_cnpj }}</td>
     </ng-container>
 
     <ng-container matColumnDef="nome_forma_pagamento">
       <th mat-header-cell *matHeaderCellDef>Forma de Pagamento</th>
-      <td mat-cell *matCellDef="let s">{{ s.forma_pagamento.nome_forma_pagamento }}</td>
+      <td mat-cell *matCellDef="let sale">{{ sale.forma_pagamento?.nome_forma_pagamento }}</td>
     </ng-container>
 
     <ng-container matColumnDef="fk_cpf_funcionario">
-      <th mat-header-cell *matHeaderCellDef>CPF do funcionário</th>
-      <td mat-cell *matCellDef="let s">{{ s.funcionario.cpf }}</td>
+      <th mat-header-cell *matHeaderCellDef>CPF do Funcionário</th>
+      <td mat-cell *matCellDef="let sale">{{ sale.funcionario?.cpf }}</td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Ações</th>
-      <td mat-cell *matCellDef="let s">
-        <button mat-icon-button [routerLink]="['/vendas', s.id_pedido]">
+      <td mat-cell *matCellDef="let sale">
+        <button mat-icon-button [routerLink]="['/vendas', sale.id_pedido]">
           <mat-icon>edit</mat-icon>
         </button>
       </td>
     </ng-container>
-  
+
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
     <tr mat-row *matRowDef="let row; columns: columns"></tr>
   </table>
+
+  <!-- Pagination control -->
+  <mat-paginator [pageSizeOptions]="[10, 20, 50]" 
+                 showFirstLastButtons 
+                 aria-label="Select page of sales">
+  </mat-paginator>
 </mat-card>
