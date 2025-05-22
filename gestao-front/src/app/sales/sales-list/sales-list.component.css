@@ -25,3 +25,12 @@
   padding: 20px;
   margin: 20px;
 }
+
+.filter-container {
+  margin: 15px 0;
+  width: 300px;
+}
+
+.mat-form-field {
+  width: 100%;
+}

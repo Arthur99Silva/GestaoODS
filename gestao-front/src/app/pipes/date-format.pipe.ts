@@ -13,13 +13,10 @@ export class DateFormatPipe implements PipeTransform {
     if (!value) return '';
     
     try {
-      // Create date object
       const date = typeof value === 'string' ? new Date(value) : value;
-      
-      // Adjust for timezone offset to prevent date shifting
+      // Adjust for timezone offset
       const timezoneOffset = date.getTimezoneOffset() * 60000;
       const adjustedDate = new Date(date.getTime() + timezoneOffset);
-      
       return formatDate(adjustedDate, format, this.locale);
     } catch (e) {
       console.error('Error formatting date', e);

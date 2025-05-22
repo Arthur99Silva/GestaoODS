@@ -7,31 +7,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
-import { MatPaginatorIntl } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { FormControl } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { DateFormatPipe } from '../../pipes/date-format.pipe';
-
-function getPortuguesePaginatorIntl() {
-  const paginatorIntl = new MatPaginatorIntl();
-  paginatorIntl.itemsPerPageLabel = 'Itens por página:';
-  paginatorIntl.nextPageLabel = 'Próxima página';
-  paginatorIntl.previousPageLabel = 'Página anterior';
-  paginatorIntl.firstPageLabel = 'Primeira página';
-  paginatorIntl.lastPageLabel = 'Última página';
-  paginatorIntl.getRangeLabel = (page: number, pageSize: number, length: number) => {
-    return `${page * pageSize + 1} - ${Math.min((page + 1) * pageSize, length)} de ${length}`;
-  };
-  return paginatorIntl;
-}
+import { ReactiveFormsModule } from '@angular/forms';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @Component({
   standalone: true,
   selector: 'app-sales-list',
   templateUrl: './sales-list.component.html',
   styleUrls: ['./sales-list.component.css'],
-  providers: [
-    { provide: MatPaginatorIntl, useValue: getPortuguesePaginatorIntl() }
-  ],
   imports: [
     CommonModule,
     MatCardModule,
@@ -40,7 +31,16 @@ function getPortuguesePaginatorIntl() {
     MatIconModule,
     RouterLink,
     DateFormatPipe,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ReactiveFormsModule
+  ],
+  providers: [
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
   ]
 })
 export class SalesListComponent implements OnInit {
@@ -49,11 +49,18 @@ export class SalesListComponent implements OnInit {
              'nome_forma_pagamento', 'fk_cpf_funcionario', 'actions'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  dateFilter = new FormControl<Date | null>(null);
+  filteredData: any[] = [];
 
   constructor(private api: ApiService) {}
 
   ngOnInit() {
     this.loadSales();
+    
+    // Listen for date filter changes
+    this.dateFilter.valueChanges.subscribe((date: Date | null) => {
+      this.applyDateFilter(date);
+    });
   }
 
   ngAfterViewInit() {
@@ -64,10 +71,35 @@ export class SalesListComponent implements OnInit {
     this.api.getSales().subscribe({
       next: (list) => {
         this.dataSource.data = list;
-        // Set pagination options
+        this.filteredData = [...list];
         this.dataSource.paginator = this.paginator;
       },
-      error: (err) => console.error('Erro ao carregar as vendas', err)
+      error: (err) => console.error('Error loading sales', err)
     });
+  }
+
+  applyDateFilter(filterDate: Date | null) {
+    if (!filterDate) {
+      this.dataSource.data = [...this.filteredData];
+      return;
+    }
+
+    const filterValue = this.formatDateForFilter(filterDate);
+    this.dataSource.data = this.filteredData.filter(sale => {
+      const saleDate = new Date(sale.data_venda);
+      return this.formatDateForFilter(saleDate) === filterValue;
+    });
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  private formatDateForFilter(date: Date): string {
+    return date.toISOString().split('T')[0]; // YYYY-MM-DD format
+  }
+
+  clearDateFilter() {
+    this.dateFilter.setValue(null);
   }
 }
