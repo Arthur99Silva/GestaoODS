@@ -7,17 +7,20 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { Produto } from './entity/produto.entity';
 import { ProdutoService } from './produto.service';
 import { CreateProdutoDto } from './dto/create-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto.dto';
+import { instanceToPlain } from 'class-transformer';
 
 @Controller('produto')
 export class ProdutoController {
   constructor(private readonly produtoService: ProdutoService) {}
 
   @Post()
-  create(@Body() createProdutoDto: CreateProdutoDto) {
-    return this.produtoService.create(createProdutoDto);
+  async create(@Body() createProdutoDto: CreateProdutoDto) {
+    const produto: Produto = await this.produtoService.create(createProdutoDto);
+    return instanceToPlain(produto);
   }
 
   @Get()
