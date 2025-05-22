@@ -1,34 +1,73 @@
 <mat-card class="full-card">
-    <h2>{{ isEdit ? 'Editar Fornecedor' : 'Nova Fornecedor' }}</h2>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <h2>{{ isEdit ? 'Editar Fornecedor' : 'Novo Fornecedor' }}</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Nome</mat-label>
-        <input matInput formControlName="nome_fornecedor" />
-      </mat-form-field>
+    <!-- Nome -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="nome_fornecedor" />
+      <mat-error *ngIf="form.get('nome_fornecedor')?.hasError('required')">
+        Nome é obrigatório
+      </mat-error>
+    </mat-form-field>
 
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>CPF/CNPJ</mat-label>
-        <input matInput formControlName="cpf_cnpj" />
-      </mat-form-field>
+    <!-- CPF/CNPJ -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>CPF/CNPJ</mat-label>
+      <input matInput formControlName="cpf_cnpj" 
+             (input)="formatCpfCnpj($event)"
+             placeholder="000.000.000-00 ou 00.000.000/0000-00">
+      <mat-error *ngIf="form.get('cpf_cnpj')?.hasError('required')">
+        CPF/CNPJ é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('cpf_cnpj')?.hasError('invalidCpf')">
+        CPF inválido
+      </mat-error>
+      <mat-error *ngIf="form.get('cpf_cnpj')?.hasError('invalidCnpj')">
+        CNPJ inválido
+      </mat-error>
+    </mat-form-field>
 
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>E-mail</mat-label>
-        <input matInput formControlName="email" type="email" />
-      </mat-form-field>
+    <!-- E-mail -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>E-mail</mat-label>
+      <input matInput formControlName="email" type="email" />
+      <mat-error *ngIf="form.get('email')?.hasError('required')">
+        E-mail é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">
+        Formato de e-mail inválido
+      </mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('invalidCompanyEmail')">
+        E-mail deve terminar com .com.br
+      </mat-error>
+    </mat-form-field>
 
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Telefone</mat-label>
-        <input matInput formControlName="telefone" />
-      </mat-form-field>
+    <!-- Telefone -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Telefone</mat-label>
+      <input matInput formControlName="telefone" 
+             (input)="formatPhone($event)"
+             placeholder="(XX) XXXX-XXXX">
+      <mat-error *ngIf="form.get('telefone')?.hasError('required')">
+        Telefone é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('telefone')?.hasError('pattern')">
+        Formato: (XX) XXXX-XXXX ou (XX) XXXXX-XXXX
+      </mat-error>
+    </mat-form-field>
 
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Endereço</mat-label>
-        <input matInput formControlName="endereco" />
-      </mat-form-field>
+    <!-- Endereço -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Endereço</mat-label>
+      <input matInput formControlName="endereco" />
+      <mat-error *ngIf="form.get('endereco')?.hasError('required')">
+        Endereço é obrigatório
+      </mat-error>
+    </mat-form-field>
 
-      <button mat-raised-button color="primary" type="submit" class="full-width">
-        {{ isEdit ? 'Salvar' : 'Criar' }}
-      </button>
-    </form>
-  </mat-card>
+    <button mat-raised-button color="primary" type="submit" class="full-width">
+      {{ isEdit ? 'Salvar' : 'Criar' }}
+    </button>
+  </form>
+</mat-card>

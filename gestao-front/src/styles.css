@@ -10,3 +10,21 @@ body {
   .content {
     padding: 2rem;
   }
+
+  /* Validações */
+.mat-form-field-invalid .mat-form-field-label {
+  color: #f44336 !important;
+}
+
+.mat-form-field-invalid .mat-input-element {
+  color: #f44336 !important;
+}
+
+mat-error {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.full-width {
+  margin-bottom: 1rem;
+}

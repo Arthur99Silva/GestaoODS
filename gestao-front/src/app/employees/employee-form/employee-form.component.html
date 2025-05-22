@@ -2,64 +2,136 @@
   <h2>{{ isEdit ? 'Editar Funcionário' : 'Novo Funcionário' }}</h2>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Nome -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Nome</mat-label>
       <input matInput formControlName="nome" />
+      <mat-error *ngIf="form.get('nome')?.hasError('required')">
+        Nome é obrigatório
+      </mat-error>
     </mat-form-field>
 
+    <!-- E-mail -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>E-mail</mat-label>
       <input matInput formControlName="email" type="email" />
+      <mat-error *ngIf="form.get('email')?.hasError('required')">
+        E-mail é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">
+        Formato de e-mail inválido
+      </mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('invalidCompanyEmail')">
+        E-mail deve terminar com .com
+      </mat-error>
     </mat-form-field>
 
+    <!-- CPF -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>CPF</mat-label>
-      <input matInput formControlName="cpf" />
+      <input matInput formControlName="cpf" 
+             (input)="formatCPF($event)"
+             placeholder="000.000.000-00" />
+      <mat-error *ngIf="form.get('cpf')?.hasError('required')">
+        CPF é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('cpf')?.hasError('invalidCpf')">
+        CPF inválido
+      </mat-error>
     </mat-form-field>
 
+    <!-- Telefone -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Telefone</mat-label>
-      <input matInput formControlName="telefone" />
+      <input matInput formControlName="telefone" 
+             (input)="formatPhone($event)"
+             placeholder="(XX) XXXX-XXXX" />
+      <mat-error *ngIf="form.get('telefone')?.hasError('required')">
+        Telefone é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('telefone')?.hasError('pattern')">
+        Formato: (XX) XXXX-XXXX ou (XX) XXXXX-XXXX
+      </mat-error>
     </mat-form-field>
 
+    <!-- Endereço -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Endereço</mat-label>
       <input matInput formControlName="endereco" />
+      <mat-error *ngIf="form.get('endereco')?.hasError('required')">
+        Endereço é obrigatório
+      </mat-error>
     </mat-form-field>
 
+    <!-- Contrato -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Contrato</mat-label>
       <input matInput formControlName="contrato" />
+      <mat-error *ngIf="form.get('contrato')?.hasError('required')">
+        Contrato é obrigatório
+      </mat-error>
     </mat-form-field>
 
+    <!-- Data Pagamento -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Data de Pagamento</mat-label>
-      <input matInput formControlName="data_pagamento" type="datetime" />
+      <input matInput formControlName="data_pagamento" type="date" />
+      <mat-error *ngIf="form.get('data_pagamento')?.hasError('pastDate')">
+        Data deve ser futura
+      </mat-error>
     </mat-form-field>
 
+    <!-- Data Férias -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Data das Férias</mat-label>
-      <input matInput formControlName="data_ferias" type="datetime" />
+      <input matInput formControlName="data_ferias" type="date" />
+      <mat-error *ngIf="form.get('data_ferias')?.hasError('futureDate')">
+        Data deve ser passada
+      </mat-error>
     </mat-form-field>
 
+    <!-- Salário -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Salário</mat-label>
-      <input matInput formControlName="salario" type="number"/>
+      <input matInput formControlName="salario" 
+             type="number"
+             step="0.01"
+             min="1320" />
+      <mat-error *ngIf="form.get('salario')?.hasError('min')">
+        Mínimo R$ 1.320,00
+      </mat-error>
     </mat-form-field>
 
+    <!-- Senha -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Senha</mat-label>
-      <input matInput formControlName="senha" type="password"/>
+      <input matInput formControlName="senha" 
+             type="password"
+             minlength="8" />
+      <mat-error *ngIf="form.get('senha')?.hasError('required')">
+        Senha é obrigatória
+      </mat-error>
+      <mat-error *ngIf="form.get('senha')?.hasError('minlength')">
+        Mínimo 8 caracteres
+      </mat-error>
     </mat-form-field>
 
+    <!-- Cargo -->
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Role</mat-label>
+      <mat-label>Cargo</mat-label>
       <input matInput formControlName="role" />
+      <mat-error *ngIf="form.get('role')?.hasError('required')">
+        Cargo é obrigatório
+      </mat-error>
     </mat-form-field>
 
-
-    <button mat-raised-button color="primary" type="submit" class="full-width">
-      {{ isEdit ? 'Salvar' : 'Criar' }}
+    <!-- Botão Submit -->
+    <button mat-raised-button 
+            color="primary" 
+            type="submit" 
+            class="full-width"
+            [disabled]="form.invalid">
+      {{ isEdit ? 'Salvar Alterações' : 'Cadastrar Funcionário' }}
     </button>
   </form>
 </mat-card>
