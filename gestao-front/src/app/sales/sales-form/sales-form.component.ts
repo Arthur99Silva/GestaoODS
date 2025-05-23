@@ -18,6 +18,9 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { DateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   standalone: true,
@@ -33,7 +36,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatDatepickerModule,
     MatIconModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSnackBarModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -43,6 +49,7 @@ import { MatIconModule } from '@angular/material/icon';
 export class SalesFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
+  isLoading = false;
   private id?: string;
 
   // Dropdown options
@@ -55,32 +62,63 @@ export class SalesFormComponent implements OnInit {
     private api: ApiService,
     private router: Router,
     private route: ActivatedRoute,
-    private dateAdapter: DateAdapter<Date>
+    private dateAdapter: DateAdapter<Date>,
+    private snackBar: MatSnackBar
   ) {
     this.dateAdapter.setLocale('pt-BR');
   }
 
   ngOnInit() {
+    this.initializeForm();
+    this.loadDropdownData();
+
+    this.id = this.route.snapshot.paramMap.get('id') || undefined;
+    if (this.id) {
+      this.loadSaleData();
+    }
+  }
+
+  private initializeForm() {
     this.form = this.fb.group({
-      valor_total: ['', Validators.required],
+      valor_total: ['', [Validators.required, Validators.min(0.01)]],
       data_venda: ['', Validators.required],
       nota_fiscal: ['', Validators.required],
       fk_cpf_cnpj_cliente: ['', Validators.required],
       fk_forma_pagamento: ['', Validators.required],
       fk_cpf_funcionario: ['', Validators.required]
     });
+  }
 
-    // Load dropdown data
-    this.loadCustomers();
-    this.loadPaymentMethods();
-    this.loadEmployees();
+  private loadDropdownData() {
+    this.isLoading = true;
+    
+    // Load customers
+    this.api.getCustomers().subscribe({
+      next: (customers) => this.customers = customers,
+      error: (err) => this.showError('Erro ao carregar clientes')
+    });
 
-    this.id = this.route.snapshot.paramMap.get('id') || undefined;
-    if (this.id) {
-      this.isEdit = true;
-      this.api.getSale(this.id).subscribe(comp => {
+    // Load payment methods
+    this.api.getPayments().subscribe({
+      next: (payments) => this.payment_methods = payments,
+      error: (err) => this.showError('Erro ao carregar formas de pagamento')
+    });
+
+    // Load employees
+    this.api.getEmployees().subscribe({
+      next: (employees) => this.employees = employees,
+      complete: () => this.isLoading = false,
+      error: (err) => this.showError('Erro ao carregar funcionários')
+    });
+  }
+
+  private loadSaleData() {
+    this.isLoading = true;
+    this.isEdit = true;
+    
+    this.api.getSale(this.id!).subscribe({
+      next: (comp) => {
         let saleDate = comp.data_venda ? this.parseBackendDate(comp.data_venda) : null;
-
         this.form.patchValue({
           ...comp,
           fk_cpf_cnpj_cliente: comp.cliente?.cpf_cnpj,
@@ -89,45 +127,22 @@ export class SalesFormComponent implements OnInit {
           valor_total: String(comp.valor_total),
           data_venda: saleDate
         });
-      });
-    }
-  }
-
-  // Load dropdown data methods
-  private loadCustomers() {
-    this.api.getCustomers().subscribe({
-      next: (customers) => {
-        this.customers = customers;
+        this.isLoading = false;
       },
-      error: (err) => console.error('Erro ao carregar customers:', err)
+      error: (err) => {
+        this.showError('Erro ao carregar venda');
+        this.isLoading = false;
+      }
     });
   }
 
-  private loadPaymentMethods() {
-    this.api.getPayments().subscribe({
-      next: (payments) => {
-        this.payment_methods = payments;
-      },
-      error: (err) => console.error('Erro ao carregar formas de pagamento:', err)
-    });
-  }
-
-  private loadEmployees() {
-    this.api.getEmployees().subscribe({
-      next: (employees) => {
-        this.employees = employees;
-      },
-      error: (err) => console.error('Erro ao carregar funcionários:', err)
-    });
-  }
-
-  // Rest of your existing methods...
   onSubmit() {
     if (this.form.invalid) {
-      console.warn('Form inválido', this.form.errors);
+      this.showError('Por favor, preencha todos os campos obrigatórios');
       return;
     }
 
+    this.isLoading = true;
     const formData = {
       ...this.form.value,
       valor_total: parseFloat(this.form.value.valor_total),
@@ -141,10 +156,27 @@ export class SalesFormComponent implements OnInit {
 
     obs.subscribe({
       next: (venda: Sales) => {
-        console.log('Venda salva com sucesso', venda);
+        this.showSuccess('Venda salva com sucesso!');
         this.router.navigate(['/vendas']);
       },
-      error: err => console.error('Erro ao salvar venda:', err)
+      error: (err) => {
+        this.showError('Erro ao salvar venda. Por favor, tente novamente.');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  private showError(message: string) {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 5000,
+      panelClass: ['error-snackbar']
+    });
+  }
+
+  private showSuccess(message: string) {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 3000,
+      panelClass: ['success-snackbar']
     });
   }
 

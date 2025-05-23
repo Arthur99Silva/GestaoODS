@@ -1,7 +1,8 @@
 <mat-card class="full-card">
     <h2>{{ isEdit ? 'Editar Cliente' : 'Novo Cliente' }}</h2>
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Nome</mat-label>
         <input matInput formControlName="nome" />
@@ -27,8 +28,12 @@
         <input matInput formControlName="endereco" />
       </mat-form-field>
 
-      <button mat-raised-button color="primary" type="submit" class="full-width">
+      <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="isLoading">
         {{ isEdit ? 'Salvar' : 'Criar' }}
       </button>
     </form>
+
+    <div *ngIf="isLoading" class="loading-overlay">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
   </mat-card>
