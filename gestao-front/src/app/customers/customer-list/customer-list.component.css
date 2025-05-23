@@ -26,3 +26,17 @@
   padding: 20px;
   margin: 20px;
 }
+
+.search-container {
+  margin-bottom: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.no-results {
+  padding: 20px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.54);
+}

@@ -4,6 +4,14 @@
       <button mat-raised-button color="primary" routerLink="/clientes/new">Novo Cliente</button>
     </div>
 
+    <div class="search-container">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Pesquisar clientes</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Digite para filtrar">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 full-table">
 
       <!-- Nome -->
@@ -50,9 +58,14 @@
       <tr mat-row *matRowDef="let row; columns: columns"></tr>
     </table>
 
-      <!-- Pagination control -->
-  <mat-paginator [pageSizeOptions]="[10, 20, 50]" 
-                 showFirstLastButtons 
-                 aria-label="Select page of sales">
-  </mat-paginator>
-  </mat-card>
+    <!-- No results message -->
+    <div class="no-results" *ngIf="dataSource.filteredData.length === 0">
+      Nenhum cliente encontrado com o filtro aplicado.
+    </div>
+
+    <!-- Pagination control -->
+    <mat-paginator [pageSizeOptions]="[10, 20, 50]" 
+                   showFirstLastButtons 
+                   aria-label="Select page of sales">
+    </mat-paginator>
+</mat-card>
