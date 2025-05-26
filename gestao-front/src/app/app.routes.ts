@@ -6,7 +6,7 @@ export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent) },
   { path: 'register', loadComponent: () => import('./auth/register-user/register-user.component').then(m => m.RegisterUserComponent) },
 
-  // rota para Home
+  // Rota para Home
   { path: 'home', loadComponent: () => import('./home/home.component').then(m => m.HomeComponent) },
 
   // Clientes
@@ -38,11 +38,17 @@ export const routes: Routes = [
   { path: 'vendas/new', loadComponent: () => import('./sales/sales-form/sales-form.component').then(m => m.SalesFormComponent) },
   { path: 'vendas/:id', loadComponent: () => import('./sales/sales-form/sales-form.component').then(m => m.SalesFormComponent) },
 
-
   // Fornecedor
   { path: 'fornecedor', loadComponent: () => import('./supplier/supplier-list/supplier-list.component').then(m => m.SupplierListComponent) },
   { path: 'fornecedor/new', loadComponent: () => import('./supplier/supplier-form/supplier-form.component').then(m => m.SupplierFormComponent) },
   { path: 'fornecedor/:cpf_cnpj', loadComponent: () => import('./supplier/supplier-form/supplier-form.component').then(m => m.SupplierFormComponent) },
+  
+  // Nova rota para consulta de produtos
+  { 
+    path: 'fornecedor-produtos', 
+    loadComponent: () => import('./supplier/supplier-products/supplier-products.component').then(m => m.SupplierProductsComponent) 
+  },
 
+  // Rota curinga (mantém por último)
   { path: '**', redirectTo: 'login', pathMatch: 'full' }
 ];

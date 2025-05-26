@@ -81,6 +81,19 @@ export interface Supplier {
   endereco: string;
 }
 
+export interface Product {
+  id_produto: number;
+  nome: string;
+  preco: number;
+  estoque: number;
+  fk_cpf_cnpj_fornecedor: string;
+}
+
+export interface SupplierWithProducts {
+  supplier: Supplier;
+  products: Product[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -202,5 +215,9 @@ export class ApiService {
 
   deleteSupplier(cpf_cnpj_fornecedor: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/fornecedor/${cpf_cnpj_fornecedor}`);
+  }
+
+  getSupplierProducts(cpf_cnpj: string): Observable<SupplierWithProducts> {
+    return this.http.get<SupplierWithProducts>(`${this.baseUrl}/fornecedores/${cpf_cnpj}/produtos`);
   }
 }

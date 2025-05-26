@@ -57,7 +57,8 @@ export class HeaderComponent {
       label: 'Fornecedores',
       routes: [
         { path: '/fornecedor', label: 'Listar Fornecedores' },
-        { path: '/fornecedor/new', label: 'Cadastrar Fornecedor' }
+        { path: '/fornecedor/new', label: 'Cadastrar Fornecedor' },
+        { path: '/fornecedor-produtos', label: 'Consultar Produtos' }
       ]
     }
   ];
