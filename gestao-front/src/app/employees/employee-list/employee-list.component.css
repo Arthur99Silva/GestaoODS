@@ -1,13 +1,18 @@
-.list-card {
-    margin: 2rem;
-    padding: 1rem;
-  }
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  .full-table {
-    width: 100%;
-  }
+.full-card {
+  margin: 2rem;
+  padding: 1rem;
+}
+
+.filter-container {
+  margin: 1rem 0;
+  width: 300px;
+}
+
+.full-table {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+mat-paginator {
+  background: transparent;
+}

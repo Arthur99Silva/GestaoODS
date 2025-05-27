@@ -14,6 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService, Employee } from '../../services/api.service';
 import { isValid as isValidCPF } from '@fnando/cpf';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   standalone: true,
@@ -26,7 +28,9 @@ import { isValid as isValidCPF } from '@fnando/cpf';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class EmployeeFormComponent implements OnInit {

@@ -9,6 +9,20 @@
     </button>
   </div>
 
+  <!-- Filtro de CPF -->
+  <div class="filter-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Filtrar por CPF</mat-label>
+      <input 
+        matInput 
+        placeholder="Digite o CPF" 
+        (keyup)="applyFilter($event)"
+        [value]="filterValue"
+      >
+    </mat-form-field>
+  </div>
+
+  <!-- Tabela -->
   <table mat-table [dataSource]="dataSource" class="full-table">
     <!-- Coluna nome -->
     <ng-container matColumnDef="nome">
@@ -83,4 +97,11 @@
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
     <tr mat-row *matRowDef="let row; columns: columns"></tr>
   </table>
+
+  <!-- Paginação -->
+  <mat-paginator 
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+    aria-label="Selecione a página">
+  </mat-paginator>
 </mat-card>

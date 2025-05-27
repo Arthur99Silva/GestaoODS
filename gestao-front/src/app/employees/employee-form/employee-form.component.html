@@ -72,19 +72,23 @@
       </mat-error>
     </mat-form-field>
 
-    <!-- Data Pagamento -->
+    <!-- Data Pagamento com Datepicker -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Data de Pagamento</mat-label>
-      <input matInput formControlName="data_pagamento" type="date" />
+      <input matInput [matDatepicker]="pickerPagamento" formControlName="data_pagamento">
+      <mat-datepicker-toggle matSuffix [for]="pickerPagamento"></mat-datepicker-toggle>
+      <mat-datepicker #pickerPagamento></mat-datepicker>
       <mat-error *ngIf="form.get('data_pagamento')?.hasError('pastDate')">
         Data deve ser futura
       </mat-error>
     </mat-form-field>
 
-    <!-- Data Férias -->
+    <!-- Data Férias com Datepicker -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Data das Férias</mat-label>
-      <input matInput formControlName="data_ferias" type="date" />
+      <input matInput [matDatepicker]="pickerFerias" formControlName="data_ferias">
+      <mat-datepicker-toggle matSuffix [for]="pickerFerias"></mat-datepicker-toggle>
+      <mat-datepicker #pickerFerias></mat-datepicker>
       <mat-error *ngIf="form.get('data_ferias')?.hasError('futureDate')">
         Data deve ser passada
       </mat-error>

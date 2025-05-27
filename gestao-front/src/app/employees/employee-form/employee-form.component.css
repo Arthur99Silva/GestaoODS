@@ -6,3 +6,8 @@
   .full-width {
     width: 100%;
   }
+
+  /* Ajuste para o ícone do calendário */
+mat-datepicker-toggle {
+  color: rgba(0, 0, 0, 0.54);
+}
