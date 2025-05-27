@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { 
-  FormBuilder, 
-  FormGroup, 
-  Validators, 
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
   ReactiveFormsModule,
-  AbstractControl 
+  AbstractControl
 } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,8 @@ import { MatTableModule } from '@angular/material/table';
 import { ApiService, Supplier, Product } from '../../services/api.service';
 import { isValid as isValidCPF } from '@fnando/cpf';
 import { isValid as isValidCNPJ } from '@fnando/cnpj';
+// Import MatSnackBar and MatSnackBarModule
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   standalone: true,
@@ -28,18 +30,21 @@ import { isValid as isValidCNPJ } from '@fnando/cnpj';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatTableModule
+    MatTableModule,
+    MatSnackBarModule // Add MatSnackBarModule here
   ]
 })
 export class SupplierProductsComponent {
   searchForm: FormGroup;
   supplier: Supplier | null = null;
   products: Product[] = [];
-  displayedColumns: string[] = ['nome', 'preco', 'estoque'];
+  // Updated displayedColumns to reflect new Product interface property names
+  displayedColumns: string[] = ['nome_produto', 'valor_venda', 'qtd_produto'];
 
   constructor(
     private fb: FormBuilder,
-    private api: ApiService
+    private api: ApiService,
+    private snackBar: MatSnackBar // Inject MatSnackBar
   ) {
     this.searchForm = this.fb.group({
       cpf_cnpj: ['', [Validators.required, this.validateCpfCnpj]]
@@ -47,7 +52,7 @@ export class SupplierProductsComponent {
   }
 
   validateCpfCnpj(control: AbstractControl) {
-    const value = control.value.replace(/\D/g, '');
+    const value = control.value ? control.value.replace(/\D/g, '') : '';
     if (value.length === 11 && !isValidCPF(value)) {
       return { invalidCpf: true };
     }
@@ -75,19 +80,31 @@ export class SupplierProductsComponent {
   }
 
   search() {
-    if (this.searchForm.invalid) return;
+    if (this.searchForm.invalid) {
+        this.snackBar.open('Por favor, insira um CPF/CNPJ válido.', 'Fechar', { duration: 3000 });
+        return;
+    }
 
-    const cpf_cnpj = this.searchForm.value.cpf_cnpj.replace(/\D/g, '');
-    
+    const cpf_cnpj_rawValue = this.searchForm.value.cpf_cnpj;
+    if (!cpf_cnpj_rawValue) {
+        this.snackBar.open('CPF/CNPJ não pode estar vazio.', 'Fechar', { duration: 3000 });
+        return;
+    }
+    const cpf_cnpj = cpf_cnpj_rawValue.replace(/\D/g, '');
+
     this.api.getSupplierProducts(cpf_cnpj).subscribe({
       next: (result: { supplier: Supplier, products: Product[] }) => {
         this.supplier = result.supplier;
         this.products = result.products;
+        if (this.products.length === 0) {
+          this.snackBar.open('Nenhum produto encontrado para este fornecedor.', 'Fechar', { duration: 3000 });
+        }
       },
       error: (err) => {
         console.error('Erro na busca:', err);
         this.supplier = null;
         this.products = [];
+        this.snackBar.open('Erro ao buscar produtos do fornecedor. Verifique o CPF/CNPJ.', 'Fechar', { duration: 3000 });
       }
     });
   }

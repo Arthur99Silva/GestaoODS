@@ -43,10 +43,17 @@ export const routes: Routes = [
   { path: 'fornecedor/new', loadComponent: () => import('./supplier/supplier-form/supplier-form.component').then(m => m.SupplierFormComponent) },
   { path: 'fornecedor/:cpf_cnpj', loadComponent: () => import('./supplier/supplier-form/supplier-form.component').then(m => m.SupplierFormComponent) },
   
-  // Nova rota para consulta de produtos
   { 
     path: 'fornecedor-produtos', 
     loadComponent: () => import('./supplier/supplier-products/supplier-products.component').then(m => m.SupplierProductsComponent) 
+  },
+
+  // Nova rota para Gestão de Produtos
+  { 
+    path: 'products', 
+    // Ajuste o caminho se o seu ProductManagementComponent estiver em local diferente
+    loadComponent: () => import('./supplier/product-management/product-management.component').then(m => m.ProductManagementComponent),
+    title: 'Gestão de Produtos' 
   },
 
   // Rota curinga (mantém por último)

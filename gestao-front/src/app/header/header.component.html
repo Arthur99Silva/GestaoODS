@@ -1,44 +1,40 @@
 <mat-toolbar color="primary" class="header-toolbar">
-    <div class="header-content">
-      <!-- Logo -->
-      <a routerLink="/home" class="logo-link">
-        <img src="assets/logo.png" alt="Logo" class="logo">
-      </a>
-  
-      <!-- Menu Principal -->
-      <nav class="nav-links">
-        @for (group of mainActions; track group.label) {
-          <div class="menu-group">
-            <button mat-button [matMenuTriggerFor]="menu">
-              {{ group.label }}
-              <mat-icon>arrow_drop_down</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              @for (item of group.routes; track item.path) {
-                <button mat-menu-item [routerLink]="item.path">
-                  {{ item.label }}
-                </button>
-              }
-            </mat-menu>
-          </div>
-        }
-      </nav>
-  
-      <!-- Ações do Usuário -->
-      <div class="user-actions">
-        <button mat-icon-button [matMenuTriggerFor]="profileMenu">
-          <mat-icon>account_circle</mat-icon>
+  <div class="header-content">
+    <a routerLink="/home" class="logo-link">
+      <img src="assets/logo.png" alt="Logo" class="logo">
+    </a>
+
+    <nav class="nav-links">
+      @for (group of mainActions; track group.label) {
+        <div class="menu-group">
+          <button mat-button [matMenuTriggerFor]="menu">
+            {{ group.label }}
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            @for (item of group.routes; track item.path) {
+              <button mat-menu-item [routerLink]="item.path">
+                {{ item.label }}
+              </button>
+            }
+          </mat-menu>
+        </div>
+      }
+    </nav>
+
+    <div class="user-actions">
+      <button mat-icon-button [matMenuTriggerFor]="profileMenu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #profileMenu="matMenu">
+        <button mat-menu-item routerLink="/fornecedor-produtos">
+          <mat-icon>search</mat-icon>
+          Consultar Produtos Forn. </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Sair
         </button>
-        <mat-menu #profileMenu="matMenu">
-          <button mat-menu-item routerLink="/fornecedor-produtos">
-            <mat-icon>search</mat-icon>
-            Consultar Produtos
-          </button>
-          <button mat-menu-item (click)="logout()">
-            <mat-icon>logout</mat-icon>
-            Sair
-          </button>
-        </mat-menu>
-      </div>
+      </mat-menu>
     </div>
-  </mat-toolbar>
+  </div>
+</mat-toolbar>

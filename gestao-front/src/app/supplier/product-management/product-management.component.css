@@ -1,0 +1,68 @@
+/* src/app/components/product-management/product-management.component.css */
+.product-management-card, .product-list-card {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .form-field {
+    flex: 1;
+  }
+  
+  .full-width-field {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .button-row {
+    margin-top: 1rem;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .product-table {
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+  
+  .no-products {
+    text-align: center;
+    color: #666;
+    margin-top: 1rem;
+    padding: 1rem;
+    font-style: italic;
+  }
+  
+  th.mat-header-cell, td.mat-cell {
+    padding-right: 10px; /* Adjust spacing as needed */
+  }
+  .filter-card {
+    margin-bottom: 1.5rem; /* Espaço entre o card de filtros e o de lista */
+  }
+  
+  .filter-form {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap; /* Permite que os campos quebrem linha em telas menores */
+  }
+  
+  .filter-field {
+    flex: 1 1 200px; /* Permite que os campos cresçam e tenham uma base */
+    min-width: 200px;
+  }
+  
+  .clear-filter-button {
+    margin-top: 8px; /* Alinha melhor com os form-fields que têm um espaço interno */
+  }
+  
+  .clear-filter-button mat-icon {
+    margin-right: 5px;
+  }
+  

@@ -58,7 +58,17 @@ export class HeaderComponent {
       routes: [
         { path: '/fornecedor', label: 'Listar Fornecedores' },
         { path: '/fornecedor/new', label: 'Cadastrar Fornecedor' },
-        { path: '/fornecedor-produtos', label: 'Consultar Produtos' }
+        { path: '/fornecedor-produtos', label: 'Consultar Produtos' } // Label ajustado para clareza
+      ]
+    },
+    // Novo menu para Produtos
+    {
+      label: 'Produtos',
+      routes: [
+        { path: '/products', label: 'Gerenciar Produtos' }
+        // Se você tivesse rotas separadas para listar e cadastrar:
+        // { path: '/products', label: 'Listar Produtos' },
+        // { path: '/products/new', label: 'Cadastrar Produto' }
       ]
     }
   ];
@@ -66,7 +76,6 @@ export class HeaderComponent {
   constructor(private router: Router) {}
 
   logout() {
-    // Implemente sua lógica de logout aqui
     console.log('Usuário deslogado');
     this.router.navigate(['/login']);
   }
