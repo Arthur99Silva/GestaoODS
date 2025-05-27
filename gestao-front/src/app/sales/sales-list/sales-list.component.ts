@@ -27,9 +27,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatButtonModule,
     MatIconModule,
     RouterLink,
-    FormsModule,MatFormFieldModule, // <-- Adicione esta linha
-    MatInputModule, // <-- Adicione esta linha
-    FormsModule // <-- Certifique-se que está presente
+    FormsModule,MatFormFieldModule, 
+    MatInputModule,
+    FormsModule
   ],
   providers: [CurrencyPipe, DatePipe]
 })
