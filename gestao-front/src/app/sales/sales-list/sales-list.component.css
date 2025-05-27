@@ -1,13 +1,18 @@
-.list-card {
-    margin: 2rem;
-    padding: 1rem;
-  }
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  .full-table {
-    width: 100%;
-  }
+/* sales-list.component.css */
+.filter-field {
+  margin-right: 1rem;
+  width: 300px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap; /* Permite quebra de linha em telas pequenas */
+}
+
+.header > div {
+  display: flex;
+  align-items: center;
+}
