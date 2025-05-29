@@ -6,3 +6,36 @@
   .full-width {
     width: 100%;
   }
+
+  .error-snackbar {
+  background-color: #f44336;
+  color: white;
+}
+
+.success-snackbar {
+  background-color: #4caf50;
+  color: white;
+}
+
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.full-card {
+  padding: 20px;
+  position: relative;
+}
+
+mat-progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}

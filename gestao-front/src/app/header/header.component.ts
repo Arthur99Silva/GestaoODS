@@ -35,15 +35,15 @@ export class HeaderComponent {
     { 
       label: 'Empresas',
       routes: [
-        { path: '/empresas', label: 'Listar Empresas' },
-        { path: '/empresas/new', label: 'Cadastrar Empresa' }
+        { path: '/empresa', label: 'Listar Empresas' },
+        { path: '/empresa/new', label: 'Cadastrar Empresa' }
       ]
     },
     { 
       label: 'Funcionários',
       routes: [
-        { path: '/employees', label: 'Listar Funcionários' },
-        { path: '/employees/new', label: 'Cadastrar Funcionário' }
+        { path: '/funcionario', label: 'Listar Funcionários' },
+        { path: '/funcionario/new', label: 'Cadastrar Funcionário' }
       ]
     },
     { 

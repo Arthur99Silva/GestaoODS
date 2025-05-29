@@ -1,81 +1,77 @@
 <mat-card class="full-card">
   <h2>{{ isEdit ? 'Editar Venda' : 'Nova Venda' }}</h2>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
 
-    <!-- Valor Total -->
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Valor</mat-label>
-      <input matInput formControlName="valor_total" type="number" step="0.01" />
+      <input matInput formControlName="valor_total" type="number" />
       <mat-error *ngIf="form.get('valor_total')?.hasError('required')">
         Valor é obrigatório
       </mat-error>
       <mat-error *ngIf="form.get('valor_total')?.hasError('min')">
-        Valor mínimo: R$ 0,01
+        Valor deve ser maior que zero
       </mat-error>
     </mat-form-field>
 
-    <!-- Data Venda -->
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Data</mat-label>
-      <input matInput formControlName="data_venda" type="date" />
+      <mat-label>Data da Venda</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="data_venda">
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
       <mat-error *ngIf="form.get('data_venda')?.hasError('required')">
-        Data é obrigatória
-      </mat-error>
-      <mat-error *ngIf="form.get('data_venda')?.hasError('futureDate')">
-        Data não pode ser futura
+        Data da venda é obrigatória
       </mat-error>
     </mat-form-field>
 
-    <!-- Nota Fiscal -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Nota Fiscal</mat-label>
       <input matInput formControlName="nota_fiscal" />
-      <mat-error *ngIf="form.get('nota_fiscal')?.hasError('required')">
-        Nota Fiscal é obrigatória
-      </mat-error>
     </mat-form-field>
 
-    <!-- CPF/CNPJ Cliente -->
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>CPF/CNPJ do Cliente</mat-label>
-      <input matInput formControlName="fk_cpf_cnpj_cliente" />
+      <mat-label>Cliente</mat-label>
+      <mat-select formControlName="fk_cpf_cnpj_cliente" required>
+        <mat-option *ngFor="let customer of customers" [value]="customer.cpf_cnpj">
+          {{ customer.nome }} (CPF: {{ customer.cpf_cnpj }})
+        </mat-option>
+      </mat-select>
       <mat-error *ngIf="form.get('fk_cpf_cnpj_cliente')?.hasError('required')">
-        CPF/CNPJ é obrigatório
-      </mat-error>
-      <mat-error *ngIf="form.get('fk_cpf_cnpj_cliente')?.hasError('invalidCpf')">
-        CPF inválido
-      </mat-error>
-      <mat-error *ngIf="form.get('fk_cpf_cnpj_cliente')?.hasError('invalidCnpj')">
-        CNPJ inválido
+        Cliente é obrigatório
       </mat-error>
     </mat-form-field>
 
-    <!-- Forma Pagamento -->
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Forma de Pagamento (ID)</mat-label>
-      <input matInput formControlName="fk_forma_pagamento" type="number" />
+      <mat-label>Forma de Pagamento</mat-label>
+      <mat-select formControlName="fk_forma_pagamento" required>
+        <mat-option *ngFor="let payment of payment_methods" [value]="payment.id_forma_pagamento">
+          {{ payment.nome_forma_pagamento }}
+        </mat-option>
+      </mat-select>
       <mat-error *ngIf="form.get('fk_forma_pagamento')?.hasError('required')">
         Forma de pagamento é obrigatória
       </mat-error>
-      <mat-error *ngIf="form.get('fk_forma_pagamento')?.hasError('min')">
-        ID inválido
-      </mat-error>
     </mat-form-field>
 
-    <!-- CPF Funcionário -->
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>CPF do Funcionário</mat-label>
-      <input matInput formControlName="fk_cpf_funcionario" />
+      <mat-label>Funcionário</mat-label>
+      <mat-select formControlName="fk_cpf_funcionario" required>
+        <mat-option *ngFor="let employee of employees" [value]="employee.cpf">
+          {{ employee.nome }} (CPF: {{ employee.cpf }})
+        </mat-option>
+      </mat-select>
       <mat-error *ngIf="form.get('fk_cpf_funcionario')?.hasError('required')">
-        CPF é obrigatório
-      </mat-error>
-      <mat-error *ngIf="form.get('fk_cpf_funcionario')?.hasError('invalidCpf')">
-        CPF inválido
+        Funcionário é obrigatório
       </mat-error>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" class="full-width">
+    <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="isLoading">
       {{ isEdit ? 'Salvar' : 'Criar' }}
     </button>
   </form>
+
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
 </mat-card>

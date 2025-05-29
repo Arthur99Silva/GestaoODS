@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { 
-  FormBuilder, 
-  FormGroup, 
-  Validators, 
-  ReactiveFormsModule, 
-  AbstractControl 
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl
 } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,6 +13,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService, Customer } from '../../services/api.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { isValid as isValidCPF } from '@fnando/cpf';
 import { isValid as isValidCNPJ } from '@fnando/cnpj';
 
@@ -27,20 +30,25 @@ import { isValid as isValidCNPJ } from '@fnando/cnpj';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSnackBarModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule
   ]
 })
 export class CustomerFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
+  isLoading = false;
   private cpf_cnpj?: string;
 
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
     private router: Router,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -53,9 +61,17 @@ export class CustomerFormComponent implements OnInit {
 
     this.cpf_cnpj = this.route.snapshot.paramMap.get('cpf_cnpj') || undefined;
     if (this.cpf_cnpj) {
+      this.isLoading = true;
       this.isEdit = true;
-      this.api.getCustomer(this.cpf_cnpj).subscribe(cust => {
-        this.form.patchValue(cust);
+      this.api.getCustomer(this.cpf_cnpj).subscribe({
+        next: (cust) => {
+          this.form.patchValue(cust);
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.showError('Erro ao carregar venda');
+          this.isLoading = false;
+        }
       });
     }
   }
@@ -91,8 +107,8 @@ export class CustomerFormComponent implements OnInit {
   // Formatação Telefone
   formatPhone(event: any) {
     let value = event.target.value.replace(/\D/g, '');
-    if (value.length > 2) value = `(${value.substring(0,2)}) ${value.substring(2)}`;
-    if (value.length > 10) value = `${value.substring(0,10)}-${value.substring(10,14)}`;
+    if (value.length > 2) value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+    if (value.length > 10) value = `${value.substring(0, 10)}-${value.substring(10, 14)}`;
     this.form.get('telefone')?.setValue(value.substring(0, 15), { emitEvent: false });
   }
 
@@ -101,16 +117,41 @@ export class CustomerFormComponent implements OnInit {
       Object.values(this.form.controls).forEach(control => {
         control.markAsTouched();
       });
+      this.showError('Por favor, preencha todos os campos obrigatórios');
       return;
     }
+
+    this.isLoading = true;
+
+    console.log(this.form.value);
 
     const obs = this.isEdit
       ? this.api.updateCustomer(this.cpf_cnpj!, this.form.value)
       : this.api.createCustomer(this.form.value);
 
     obs.subscribe({
-      next: () => this.router.navigate(['/clientes']),
-      error: err => console.error('Erro:', err)
+      next: (cliente: Customer) => {
+        this.showSuccess('Cliente salvo com sucesso!');
+        this.router.navigate(['/clientes']);
+      },
+      error: (err) => {
+        this.showError('Erro ao salvar cliente. Por favor, tente novamente.');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  private showError(message: string) {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 5000,
+      panelClass: ['error-snackbar']
+    });
+  }
+
+  private showSuccess(message: string) {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 3000,
+      panelClass: ['success-snackbar']
     });
   }
 }

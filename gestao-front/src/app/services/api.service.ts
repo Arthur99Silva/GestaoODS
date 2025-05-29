@@ -1,7 +1,7 @@
 // src/app/services/api.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { delay, Observable, of } from 'rxjs';
 
 export interface User {
   id?: string;
@@ -94,13 +94,18 @@ export interface SupplierWithProducts {
   products: Product[];
 }
 
+export interface Payment {
+  id_forma_pagamento: string;
+  nome_forma_pagamento: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   private baseUrl = 'http://localhost:3000';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // === Autenticação ===
   login(payload: { email: string; password: string }): Observable<{ token: string }> {
@@ -158,19 +163,19 @@ export class ApiService {
   getEmployees(): Observable<Employee[]> {
     return this.http.get<Employee[]>(`${this.baseUrl}/funcionario`);
   }
-  
+
   getEmployee(cpf: string): Observable<Employee> {
     return this.http.get<Employee>(`${this.baseUrl}/funcionario/${cpf}`);
   }
-  
-  createEmployee(emp: Omit<Employee,'id'>): Observable<Employee> {
+
+  createEmployee(emp: Omit<Employee, 'id'>): Observable<Employee> {
     return this.http.post<Employee>(`${this.baseUrl}/funcionario`, emp);
   }
-  
-  updateEmployee(cpf: string, emp: Partial<Omit<Employee,'id'>>): Observable<Employee> {
+
+  updateEmployee(cpf: string, emp: Partial<Omit<Employee, 'id'>>): Observable<Employee> {
     return this.http.patch<Employee>(`${this.baseUrl}/funcionario/${cpf}`, emp);
   }
-  
+
   deleteEmployee(cpf: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/funcionario/${cpf}`);
   }
@@ -242,5 +247,22 @@ export class ApiService {
 
   deleteProduct(id_produto: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/produtos/${id_produto}`);
+  }
+
+  // Forma Pagamento
+  getPayments(): Observable<Payment[]> {
+    //return this.http.get<Payment[]>(`${this.baseUrl}/pagamento}`);
+    // Mock data
+    const mockPayments: Payment[] = [
+      { id_forma_pagamento: '1', nome_forma_pagamento: 'Cartão de Crédito' },
+      { id_forma_pagamento: '2', nome_forma_pagamento: 'Cartão de Débito' },
+      { id_forma_pagamento: '3', nome_forma_pagamento: 'Dinheiro' },
+      { id_forma_pagamento: '4', nome_forma_pagamento: 'PIX' },
+      { id_forma_pagamento: '5', nome_forma_pagamento: 'Boleto Bancário' },
+      { id_forma_pagamento: '6', nome_forma_pagamento: 'Transferência Bancária' }
+    ];
+
+    // Simulate API delay
+    return of(mockPayments).pipe(delay(500));
   }
 }

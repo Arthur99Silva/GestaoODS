@@ -4,31 +4,39 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
 }
 
 .new-sale-button {
-  margin-left: auto; /* Empurra o botão de nova venda para a direita se houver espaço */
+  margin-left: auto;
+  /* Empurra o botão de nova venda para a direita se houver espaço */
 }
 
 .filter-container {
   display: flex;
-  flex-wrap: wrap; /* Permite que os campos quebrem linha */
-  gap: 1rem; /* Espaçamento entre os campos de filtro */
+  flex-wrap: wrap;
+  /* Permite que os campos quebrem linha */
+  gap: 1rem;
+  /* Espaçamento entre os campos de filtro */
   margin-bottom: 1.5rem;
-  align-items: flex-start; /* Alinha itens no topo se quebrar linha */
+  align-items: flex-start;
+  /* Alinha itens no topo se quebrar linha */
 }
 
 .filter-field {
-  min-width: 200px; /* Largura mínima para cada campo */
-  flex: 1; /* Permite que os campos cresçam */
+  min-width: 200px;
+  /* Largura mínima para cada campo */
+  flex: 1;
+  /* Permite que os campos cresçam */
 }
 
 .clear-button {
   /* Estilo para o botão de limpar, pode precisar de ajuste de margem vertical */
   /* Exemplo: margin-top: 8px; se os form fields tiverem padding interno */
-  height: 50px; /* Altura aproximada do mat-form-field outlined */
-  align-self: center; /* Centraliza verticalmente com os campos de filtro */
+  height: 50px;
+  /* Altura aproximada do mat-form-field outlined */
+  align-self: center;
+  /* Centraliza verticalmente com os campos de filtro */
 }
 
 
@@ -44,17 +52,52 @@
 }
 
 /* Ajuste para o cabeçalho se o botão "Nova Venda" for para outra linha em telas pequenas */
-@media (max-width: 780px) { /* Ajuste o breakpoint conforme necessário */
+@media (max-width: 780px) {
+
+  /* Ajuste o breakpoint conforme necessário */
   .header {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .new-sale-button {
     margin-left: 0;
     margin-top: 1rem;
   }
+
   .clear-button {
-    width: 100%; /* Faz o botão de limpar ocupar toda a largura abaixo dos filtros */
+    width: 100%;
+    /* Faz o botão de limpar ocupar toda a largura abaixo dos filtros */
     margin-top: 0.5rem;
   }
+}
+
+.list-card {
+  padding: 20px;
+  margin: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.full-table {
+  width: 100%;
+}
+
+
+.mat-paginator {
+  background: transparent;
+  margin-top: 16px;
+}
+
+.search-container {
+  margin-bottom: 20px;
+}
+
+.full-width {
+  width: 100%;
 }
