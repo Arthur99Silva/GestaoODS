@@ -91,7 +91,7 @@ export class SalesFormComponent implements OnInit {
 
   private loadDropdownData() {
     this.isLoading = true;
-    
+
     // Load customers
     this.api.getCustomers().subscribe({
       next: (customers) => this.customers = customers,
@@ -115,7 +115,7 @@ export class SalesFormComponent implements OnInit {
   private loadSaleData() {
     this.isLoading = true;
     this.isEdit = true;
-    
+
     this.api.getSale(this.id!).subscribe({
       next: (comp) => {
         let saleDate = comp.data_venda ? this.parseBackendDate(comp.data_venda) : null;
@@ -191,7 +191,7 @@ export class SalesFormComponent implements OnInit {
 
   private convertToBackendFormat(date: Date): string {
     if (!date) return '';
-    
+
     const utcDate = new Date(
       Date.UTC(
         date.getFullYear(),
@@ -200,7 +200,7 @@ export class SalesFormComponent implements OnInit {
         0, 0, 0, 0
       )
     );
-    
+
     return utcDate.toISOString();
   }
 }

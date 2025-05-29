@@ -45,18 +45,18 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 })
 export class SalesListComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
-  columns = ['valor_total', 'data_venda', 'nota_fiscal', 'fk_cpf_cnpj_cliente', 
-             'nome_forma_pagamento', 'fk_cpf_funcionario', 'actions'];
-  
+  columns = ['valor_total', 'data_venda', 'nota_fiscal', 'fk_cpf_cnpj_cliente',
+    'nome_forma_pagamento', 'fk_cpf_funcionario', 'actions'];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dateFilter = new FormControl<Date | null>(null);
   filteredData: any[] = [];
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   ngOnInit() {
     this.loadSales();
-    
+
     // Listen for date filter changes
     this.dateFilter.valueChanges.subscribe((date: Date | null) => {
       this.applyDateFilter(date);
