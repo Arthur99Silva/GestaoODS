@@ -6,15 +6,31 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { ApiService, Employee } from '../../services/api.service';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+
+function getPortuguesePaginatorIntl() {
+  const paginatorIntl = new MatPaginatorIntl();
+  paginatorIntl.itemsPerPageLabel = 'Itens por página:';
+  paginatorIntl.nextPageLabel = 'Próxima página';
+  paginatorIntl.previousPageLabel = 'Página anterior';
+  paginatorIntl.firstPageLabel = 'Primeira página';
+  paginatorIntl.lastPageLabel = 'Última página';
+  paginatorIntl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+    return `${page * pageSize + 1} - ${Math.min((page + 1) * pageSize, length)} de ${length}`;
+  };
+  return paginatorIntl;
+}
 
 @Component({
   standalone: true,
   selector: 'app-employee-list',
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.css'],
+  providers: [
+    { provide: MatPaginatorIntl, useValue: getPortuguesePaginatorIntl() }
+  ],
   imports: [
     CommonModule,
     MatCardModule,
@@ -34,7 +50,7 @@ export class EmployeeListComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private api: ApiService) {} // Certifique-se que ApiService está fornecido no nível adequado
+  constructor(private api: ApiService) { } // Certifique-se que ApiService está fornecido no nível adequado
 
   ngOnInit() {
     this.api.getEmployees().subscribe((list: Employee[]) => {

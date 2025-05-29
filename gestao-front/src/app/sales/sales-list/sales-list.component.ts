@@ -19,7 +19,20 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 
 // Importações para o Paginator
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
+
+function getPortuguesePaginatorIntl() {
+  const paginatorIntl = new MatPaginatorIntl();
+  paginatorIntl.itemsPerPageLabel = 'Itens por página:';
+  paginatorIntl.nextPageLabel = 'Próxima página';
+  paginatorIntl.previousPageLabel = 'Página anterior';
+  paginatorIntl.firstPageLabel = 'Primeira página';
+  paginatorIntl.lastPageLabel = 'Última página';
+  paginatorIntl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+    return `${page * pageSize + 1} - ${Math.min((page + 1) * pageSize, length)} de ${length}`;
+  };
+  return paginatorIntl;
+}
 
 @Component({
   standalone: true,
@@ -45,6 +58,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
     CurrencyPipe,
     DatePipe,
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+    {provide: MatPaginatorIntl, useValue: getPortuguesePaginatorIntl()}
   ]
 })
 export class SalesListComponent implements OnInit, AfterViewInit { // Implementa AfterViewInit

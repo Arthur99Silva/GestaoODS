@@ -17,13 +17,29 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 // Importações para o Paginator
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
+
+function getPortuguesePaginatorIntl() {
+  const paginatorIntl = new MatPaginatorIntl();
+  paginatorIntl.itemsPerPageLabel = 'Itens por página:';
+  paginatorIntl.nextPageLabel = 'Próxima página';
+  paginatorIntl.previousPageLabel = 'Página anterior';
+  paginatorIntl.firstPageLabel = 'Primeira página';
+  paginatorIntl.lastPageLabel = 'Última página';
+  paginatorIntl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+    return `${page * pageSize + 1} - ${Math.min((page + 1) * pageSize, length)} de ${length}`;
+  };
+  return paginatorIntl;
+}
 
 @Component({
   standalone: true,
   selector: 'app-company-list',
   templateUrl: './company-list.component.html',
   styleUrls: ['./company-list.component.css'],
+  providers: [
+    { provide: MatPaginatorIntl, useValue: getPortuguesePaginatorIntl() }
+  ],
   imports: [
     CommonModule,
     MatCardModule,
@@ -49,7 +65,7 @@ export class CompanyListComponent implements OnInit, AfterViewInit { // Implemen
   // Referência ao MatPaginator no template
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   ngOnInit() {
     this.api.getCompanies().subscribe(list => {
@@ -65,9 +81,9 @@ export class CompanyListComponent implements OnInit, AfterViewInit { // Implemen
   ngAfterViewInit() {
     // Garante que o paginador seja atribuído ao dataSource após a view ser inicializada.
     if (this.dataSource.data.length > 0 && !this.dataSource.paginator && this.paginator) {
-        this.dataSource.paginator = this.paginator;
+      this.dataSource.paginator = this.paginator;
     } else if (!this.dataSource.paginator && this.paginator) {
-        this.dataSource.paginator = this.paginator;
+      this.dataSource.paginator = this.paginator;
     }
   }
 
@@ -78,7 +94,7 @@ export class CompanyListComponent implements OnInit, AfterViewInit { // Implemen
       this.dataSource.data = this.originalCompanies;
     } else {
       this.dataSource.data = this.originalCompanies.filter(company =>
-        (company.nome_empresa?.toLowerCase().includes(filterText) ||
+      (company.nome_empresa?.toLowerCase().includes(filterText) ||
         company.cnpj_empresa?.toLowerCase().includes(filterText) ||
         company.email?.toLowerCase().includes(filterText) ||
         company.telefone?.toLowerCase().includes(filterText))
