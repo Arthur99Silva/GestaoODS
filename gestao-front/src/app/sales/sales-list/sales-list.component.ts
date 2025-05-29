@@ -1,5 +1,5 @@
-// src/app/companies/sales-list/sales-list.component.ts
-import { Component, OnInit } from '@angular/core';
+// src/app/sales/sales-list/sales-list.component.ts
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core'; // Adicionado ViewChild, AfterViewInit
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { CurrencyPipe, DatePipe } from '@angular/common';
@@ -10,10 +10,15 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { ApiService } from '../../services/api.service';
+import { ApiService, Sales } from '../../services/api.service';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+
+// Importações para o Paginator
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   standalone: true,
@@ -27,32 +32,95 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatButtonModule,
     MatIconModule,
     RouterLink,
-    FormsModule,MatFormFieldModule, 
+    FormsModule,
+    MatFormFieldModule,
     MatInputModule,
-    FormsModule
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatPaginatorModule, // Adicionado MatPaginatorModule
   ],
-  providers: [CurrencyPipe, DatePipe]
+  providers: [
+    CurrencyPipe,
+    DatePipe,
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+  ]
 })
-export class SalesListComponent implements OnInit {
-  dataSource = new MatTableDataSource<any>();
-  originalData: any[] = []; // Armazena a lista completa
-  cpfFilter: string = ''; // Variável para o filtro
-  columns = ['valor_total', 'data_venda', 'actions'];
+export class SalesListComponent implements OnInit, AfterViewInit { // Implementa AfterViewInit
+  dataSource = new MatTableDataSource<Sales>([]); // Inicializa com array vazio
+  originalData: Sales[] = [];
 
-  constructor(private api: ApiService) {}
+  funcionarioCpfFilter: string = '';
+  funcionarioNomeFilter: string = '';
+  dataVendaFilter: Date | null = null;
+
+  columns = ['valor_total', 'data_venda', 'nome_funcionario', 'cpf_funcionario', 'actions'];
+
+  // Referência ao MatPaginator no template
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  constructor(private api: ApiService, private datePipe: DatePipe) {}
 
   ngOnInit() {
     this.api.getSales().subscribe(list => {
-      this.originalData = list; // Salva os dados originais
+      this.originalData = list;
       this.dataSource.data = this.originalData;
+      // O paginador será conectado em ngAfterViewInit ou quando os dados estiverem prontos
+      // Se o paginator já estiver disponível, podemos tentar conectá-lo aqui também
+      if (this.paginator) {
+        this.dataSource.paginator = this.paginator;
+      }
     });
   }
 
-  // Método para aplicar o filtro
+  ngAfterViewInit() {
+    // Conecta o paginador ao dataSource após a view ser inicializada
+    // Isso garante que o paginator está disponível
+    if (this.dataSource.data.length > 0 && !this.dataSource.paginator) {
+        this.dataSource.paginator = this.paginator;
+    } else if (!this.dataSource.paginator && this.paginator) { // Caso os dados cheguem depois
+        this.dataSource.paginator = this.paginator;
+    }
+  }
+
   applyFilter() {
-    const filterValue = this.cpfFilter.trim().toLowerCase();
-    this.dataSource.data = this.originalData.filter(sale => 
-      sale.fk_cpf_funcionario.toLowerCase().includes(filterValue)
-    );
+    const cpfFuncFilterValue = this.funcionarioCpfFilter.trim().toLowerCase();
+    const nomeFuncFilterValue = this.funcionarioNomeFilter.trim().toLowerCase();
+    let dataVendaFilterString = '';
+    if (this.dataVendaFilter) {
+      dataVendaFilterString = this.datePipe.transform(this.dataVendaFilter, 'dd/MM/yyyy')?.toLowerCase() || '';
+    }
+
+    this.dataSource.data = this.originalData.filter(sale => {
+      const matchesCpfFuncionario = cpfFuncFilterValue
+        ? sale.fk_cpf_funcionario?.toLowerCase().includes(cpfFuncFilterValue)
+        : true;
+
+      const matchesNomeFuncionario = nomeFuncFilterValue
+        ? sale.funcionario?.nome?.toLowerCase().includes(nomeFuncFilterValue)
+        : true;
+      
+      const saleDateFormatted = sale.data_venda ? this.datePipe.transform(sale.data_venda, 'dd/MM/yyyy')?.toLowerCase() : '';
+      const matchesDataVenda = dataVendaFilterString
+        ? saleDateFormatted === dataVendaFilterString
+        : true;
+      
+      return matchesCpfFuncionario && matchesNomeFuncionario && matchesDataVenda;
+    });
+
+    // Após filtrar, se o paginador existir, volte para a primeira página
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  clearFilters() {
+    this.funcionarioCpfFilter = '';
+    this.funcionarioNomeFilter = '';
+    this.dataVendaFilter = null;
+    this.applyFilter();
+  }
+
+  onDateFilterChange() {
+    this.applyFilter();
   }
 }

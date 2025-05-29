@@ -1,13 +1,31 @@
+/* supplier-list.component.css */
 .list-card {
-    margin: 2rem;
-    padding: 1rem;
-  }
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  .full-table {
-    width: 100%;
-  }
+  margin: 2rem;
+  padding: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem; /* Aumentado para dar espaço ao filtro */
+}
+
+.filter-container {
+  margin-bottom: 1.5rem;
+}
+
+.filter-field {
+  width: 100%; /* Faz o campo de filtro ocupar toda a largura */
+}
+
+.full-table {
+  width: 100%;
+}
+
+.no-results {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+  margin-top: 1rem;
+}
