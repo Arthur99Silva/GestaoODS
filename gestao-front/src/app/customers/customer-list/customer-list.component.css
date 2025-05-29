@@ -27,8 +27,12 @@
   margin: 20px;
 }
 
-.search-container {
-  margin-bottom: 20px;
+.filter-container {
+  margin-bottom: 1.5rem;
+}
+
+.filter-field {
+  width: 100%; /* Faz o campo de filtro ocupar toda a largura */
 }
 
 .full-width {

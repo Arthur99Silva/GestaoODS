@@ -13,7 +13,8 @@ import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ApiService } from '../../services/api.service';
+import { ApiService, Customer } from '../../services/api.service';
+import { FormsModule } from '@angular/forms';
 
 function getPortuguesePaginatorIntl() {
   const paginatorIntl = new MatPaginatorIntl();
@@ -44,24 +45,42 @@ function getPortuguesePaginatorIntl() {
     MatButtonModule,
     RouterLink,
     MatPaginatorModule,
-    MatInputModule, // Add this
-    MatFormFieldModule // Add this
+    MatInputModule,
+    MatFormFieldModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
   ]
 })
 export class CustomerListComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
+  originalCustomers: Customer[] = []; // Para guardar a lista original
+  filterValue: string = ''; // Variável para o ngModel do filtro
+
   columns = ['nome', 'email', 'cpf_cnpj', 'telefone', 'endereco', 'actions'];
-  
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   ngOnInit() {
-    this.loadCustomers();
+    this.api.getCustomers().subscribe(list => {
+      this.originalCustomers = list;
+      this.dataSource.data = list;
+      // Conexão inicial do paginador
+      if (this.paginator) {
+        this.dataSource.paginator = this.paginator;
+      }
+    });
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    // Garante que o paginador seja atribuído ao dataSource após a view ser inicializada.
+    if (this.dataSource.data.length > 0 && !this.dataSource.paginator && this.paginator) {
+      this.dataSource.paginator = this.paginator;
+    } else if (!this.dataSource.paginator && this.paginator) {
+      this.dataSource.paginator = this.paginator;
+    }
   }
 
   loadCustomers() {
@@ -74,12 +93,28 @@ export class CustomerListComponent implements OnInit {
     });
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  applyFilter() {
+    const filterText = this.filterValue.trim().toLowerCase();
 
+    if (!filterText) {
+      this.dataSource.data = this.originalCustomers;
+    } else {
+      this.dataSource.data = this.originalCustomers.filter(customer =>
+      (customer.cpf_cnpj?.toLowerCase().includes(filterText) ||
+        customer.nome?.toLowerCase().includes(filterText) ||
+        customer.email?.toLowerCase().includes(filterText) ||
+        customer.telefone?.toLowerCase().includes(filterText))
+      );
+    }
+
+    // Após filtrar, se o paginador existir, volte para a primeira página
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  clearFilter() {
+    this.filterValue = '';
+    this.applyFilter();
   }
 }

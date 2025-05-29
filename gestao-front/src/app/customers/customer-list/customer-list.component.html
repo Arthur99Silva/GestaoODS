@@ -4,11 +4,18 @@
     <button mat-raised-button color="primary" routerLink="/clientes/new">Novo Cliente</button>
   </div>
 
-  <div class="search-container">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Pesquisar clientes</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Nome, CPF/CNPJ, Email, Telefone ou Endereço">
-      <mat-icon matSuffix>search</mat-icon>
+    <div class="filter-container">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Buscar Cliente</mat-label>
+      <input 
+        matInput 
+        [(ngModel)]="filterValue" 
+        (input)="applyFilter()"
+        placeholder="Nome, CNPJ, Email ou Telefone"
+      >
+      <button mat-icon-button matSuffix *ngIf="filterValue" (click)="clearFilter()" aria-label="Limpar filtro">
+        <mat-icon>close</mat-icon>
+      </button>
     </mat-form-field>
   </div>
 
