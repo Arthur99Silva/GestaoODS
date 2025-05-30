@@ -2,9 +2,8 @@ import { IsOptional, IsString } from 'class-validator';
 import { Expose } from 'class-transformer';
 
 export class CreateFornecedorDto {
-
   @IsString()
-  @Expose({ name: 'cpf_cnpj' })
+  @Expose({ name: 'cpf_cnpj_fornecedor' })
   cpf_cnpj_fornecedor: string;
 
   @IsOptional()
@@ -14,16 +13,16 @@ export class CreateFornecedorDto {
 
   @IsOptional()
   @IsString()
-  @Expose({ name: 'telefone' })
-  telefone: string;
+  @Expose({ name: 'telefone_fornecedor' })
+  telefone_fornecedor: string;
 
   @IsOptional()
   @IsString()
-  @Expose({ name: 'email' })
-  email: string;
+  @Expose({ name: 'email_fornecedor' })
+  email_fornecedor: string;
 
   @IsOptional()
   @IsString()
-  @Expose({ name: 'endereco' })
-  endereco: string;
+  @Expose({ name: 'endereco_fornecedor' })
+  endereco_fornecedor: string;
 }

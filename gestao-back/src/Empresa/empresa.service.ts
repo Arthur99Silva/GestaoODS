@@ -21,22 +21,24 @@ export class EmpresaService {
     return this.empresaRepository.find();
   }
 
-  async findOne(id: number): Promise<Empresa> {
-    const forma = await this.empresaRepository.findOneBy({ id_empresa: id });
+  async findOne(cnpj: string): Promise<Empresa> {
+    const forma = await this.empresaRepository.findOne({
+      where: { cnpj_empresa: cnpj },
+    });
     if (!forma) {
-      throw new NotFoundException(`Empresa ${id} não encontrada.`);
+      throw new NotFoundException(`Empresa ${cnpj} não encontrada.`);
     }
     return forma;
   }
 
-  async update(id: number, dto: UpdateEmpresaDto): Promise<Empresa> {
-    const forma = await this.findOne(id);
+  async update(cnpj: string, dto: UpdateEmpresaDto): Promise<Empresa> {
+    const forma = await this.findOne(cnpj);
     const updated = Object.assign(forma, dto);
     return this.empresaRepository.save(updated);
   }
 
-  async remove(id: number): Promise<void> {
-    const forma = await this.findOne(id);
+  async remove(cnpj: string): Promise<void> {
+    const forma = await this.findOne(cnpj);
     await this.empresaRepository.remove(forma);
   }
 }

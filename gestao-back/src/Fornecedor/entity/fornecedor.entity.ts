@@ -6,17 +6,17 @@ export class Fornecedor {
   @PrimaryColumn({ type: 'text' })
   cpf_cnpj_fornecedor: string;
 
-  @Column({ type: 'text' })
-  nome_fornecedor: string;
+  @Column({ type: 'text', nullable: true })
+  nome_fornecedor?: string;
 
-  @Column({ type: 'text' })
-  telefone: string;
+  @Column({ type: 'text', nullable: true })
+  telefone_fornecedor?: string;
 
-  @Column({ type: 'text' })
-  email: string;
+  @Column({ type: 'text', nullable: true })
+  email_fornecedor?: string;
 
-  @Column({ type: 'text' })
-  endereco: string;
+  @Column({ type: 'text', nullable: true })
+  endereco_fornecedor?: string;
 
   @OneToMany(() => Produto, (produto) => produto.fornecedor)
   produtos: Produto[];

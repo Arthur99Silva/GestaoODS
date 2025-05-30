@@ -17,7 +17,7 @@ export class ProdutoService {
 
   async create(dto: CreateProdutoDto): Promise<Produto> {
     const fornecedor = await this.fornecedorRepository.findOne({
-      where: { cpf_cnpj_fornecedor: dto.cpf_cnpj_fornecedor },
+      where: { cpf_cnpj_fornecedor: dto.fk_cpf_cnpj_fornecedor },
       relations: ['produtos'],
     });
     if (!fornecedor) {
@@ -46,9 +46,9 @@ export class ProdutoService {
   async update(id: number, dto: UpdateProdutoDto): Promise<Produto> {
     const produto = await this.findOne(id);
     const updated = Object.assign(produto, dto);
-    if (dto.cpf_cnpj_fornecedor) {
+    if (dto.fk_cpf_cnpj_fornecedor) {
       const novoFornecedor = await this.fornecedorRepository.findOne({
-        where: { cpf_cnpj_fornecedor: dto.cpf_cnpj_fornecedor },
+        where: { cpf_cnpj_fornecedor: dto.fk_cpf_cnpj_fornecedor },
         relations: ['produtos'],
       });
       if (!novoFornecedor) {
@@ -84,17 +84,9 @@ export class ProdutoService {
   async remove(id: number): Promise<void> {
     const produto = await this.produtoRepository.findOne({
       where: { id_produto: id },
-      relations: ['fornecedor'],
     });
     if (!produto) {
       throw new NotFoundException(`Produto ${id} não encontrado.`);
-    }
-    const fornecedor = produto.fornecedor;
-    if (fornecedor) {
-      fornecedor.produtos = fornecedor.produtos.filter(
-        (p) => p.id_produto !== produto.id_produto,
-      );
-      await this.fornecedorRepository.save(fornecedor);
     }
     await this.produtoRepository.remove(produto);
   }

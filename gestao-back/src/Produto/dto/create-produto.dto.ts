@@ -19,6 +19,6 @@ export class CreateProdutoDto {
   valor_venda: number;
 
   @IsString()
-  @Expose({ name: 'cpf_cnpj_fornecedor' })
-  cpf_cnpj_fornecedor: string;
+  @Expose({ name: 'fk_cpf_cnpj_fornecedor' })
+  fk_cpf_cnpj_fornecedor: string;
 }
