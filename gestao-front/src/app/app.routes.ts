@@ -41,19 +41,22 @@ export const routes: Routes = [
   // Fornecedor
   { path: 'fornecedor', loadComponent: () => import('./supplier/supplier-list/supplier-list.component').then(m => m.SupplierListComponent) },
   { path: 'fornecedor/new', loadComponent: () => import('./supplier/supplier-form/supplier-form.component').then(m => m.SupplierFormComponent) },
-  { path: 'fornecedor/:cpf_cnpj', loadComponent: () => import('./supplier/supplier-form/supplier-form.component').then(m => m.SupplierFormComponent) },
-  
-  { 
-    path: 'fornecedor-produtos', 
-    loadComponent: () => import('./supplier/supplier-products/supplier-products.component').then(m => m.SupplierProductsComponent) 
+  { path: 'fornecedor/:cpf_cnpj_fornecedor', loadComponent: () => import('./supplier/supplier-form/supplier-form.component').then(m => m.SupplierFormComponent) },
+
+  // Produtos
+  { path: 'produto', loadComponent: () => import('./supplier/product-management/product-management.component').then(m => m.ProductManagementComponent) },
+
+  {
+    path: 'fornecedor-produtos',
+    loadComponent: () => import('./supplier/supplier-products/supplier-products.component').then(m => m.SupplierProductsComponent)
   },
 
   // Nova rota para Gestão de Produtos
-  { 
-    path: 'products', 
+  {
+    path: 'products',
     // Ajuste o caminho se o seu ProductManagementComponent estiver em local diferente
     loadComponent: () => import('./supplier/product-management/product-management.component').then(m => m.ProductManagementComponent),
-    title: 'Gestão de Produtos' 
+    title: 'Gestão de Produtos'
   },
 
   // Rota curinga (mantém por último)

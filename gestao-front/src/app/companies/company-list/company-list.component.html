@@ -55,7 +55,7 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Ações</th>
         <td mat-cell *matCellDef="let e">
-          <button mat-icon-button [routerLink]="['/empresa', e.id]" matTooltip="Editar Empresa">
+          <button mat-icon-button [routerLink]="['/empresa', e.cnpj_empresa]" matTooltip="Editar Empresa">
             <mat-icon>edit</mat-icon>
           </button>
           </td>

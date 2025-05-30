@@ -33,7 +33,7 @@ import { isValid as isValidCNPJ } from '@fnando/cnpj';
 export class SupplierFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
-  private cpf_cnpj?: string;
+  private cpf_cnpj_fornecedor?: string;
 
   constructor(
     private fb: FormBuilder,
@@ -45,16 +45,16 @@ export class SupplierFormComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       nome_fornecedor: ['', Validators.required],
-      cpf_cnpj: ['', [Validators.required, this.validateCpfCnpj]],
-      email: ['', [Validators.required, Validators.email, this.validateCompanyEmail]],
-      telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{4,5}-\d{4}$/)]],
-      endereco: ['', Validators.required]
+      cpf_cnpj_fornecedor: ['', [Validators.required, this.validateCpfCnpj]],
+      email_fornecedor: ['', [Validators.required, Validators.email, this.validateCompanyEmail]],
+      telefone_fornecedor: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{4,5}-\d{4}$/)]],
+      endereco_fornecedor: ['', Validators.required]
     });
 
-    this.cpf_cnpj = this.route.snapshot.paramMap.get('cpf_cnpj') || undefined;
-    if (this.cpf_cnpj) {
+    this.cpf_cnpj_fornecedor = this.route.snapshot.paramMap.get('cpf_cnpj_fornecedor') || undefined;
+    if (this.cpf_cnpj_fornecedor) {
       this.isEdit = true;
-      this.api.getSupplier(this.cpf_cnpj).subscribe(comp => {
+      this.api.getSupplier(this.cpf_cnpj_fornecedor).subscribe(comp => {
         this.form.patchValue(comp);
       });
     }
@@ -74,9 +74,9 @@ export class SupplierFormComponent implements OnInit {
 
   // Validação de e-mail corporativo
   validateCompanyEmail(control: AbstractControl) {
-    const email = control.value;
+    const email_fornecedor = control.value;
     const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!pattern.test(email) || !email.endsWith('.com.br')) {
+    if (!pattern.test(email_fornecedor)) {
       return { invalidCompanyEmail: true };
     }
     return null;
@@ -97,15 +97,15 @@ export class SupplierFormComponent implements OnInit {
       value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
       value = value.replace(/(\d{4})(\d)/, '$1-$2');
     }
-    this.form.get('cpf_cnpj')?.setValue(value.substring(0, 18), { emitEvent: false });
+    this.form.get('cpf_cnpj_fornecedor')?.setValue(value.substring(0, 18), { emitEvent: false });
   }
 
-  // Formatação de telefone
+  // Formatação de telefone_fornecedor
   formatPhone(event: any) {
     let value = event.target.value.replace(/\D/g, '');
     if (value.length > 2) value = `(${value.substring(0,2)}) ${value.substring(2)}`;
     if (value.length > 10) value = `${value.substring(0,10)}-${value.substring(10,14)}`;
-    this.form.get('telefone')?.setValue(value.substring(0, 15), { emitEvent: false });
+    this.form.get('telefone_fornecedor')?.setValue(value.substring(0, 15), { emitEvent: false });
   }
 
   onSubmit() {
@@ -117,7 +117,7 @@ export class SupplierFormComponent implements OnInit {
     }
 
     const obs = this.isEdit
-      ? this.api.updateSupplier(this.cpf_cnpj!, this.form.value)
+      ? this.api.updateSupplier(this.cpf_cnpj_fornecedor!, this.form.value)
       : this.api.createSupplier(this.form.value);
 
     obs.subscribe({

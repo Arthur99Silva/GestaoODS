@@ -57,7 +57,7 @@ export class SupplierListComponent implements OnInit, AfterViewInit { // Impleme
   originalSuppliers: Supplier[] = [];
   filterValue: string = '';
 
-  columns = ['nome_fornecedor', 'cpf_cnpj_fornecedor', 'email', 'telefone', 'endereco', 'actions'];
+  columns = ['nome_fornecedor', 'cpf_cnpj_fornecedor', 'email_fornecedor', 'telefone_fornecedor', 'endereco_fornecedor', 'actions'];
 
   // Referência ao MatPaginator no template
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -66,6 +66,7 @@ export class SupplierListComponent implements OnInit, AfterViewInit { // Impleme
 
   ngOnInit() {
     this.api.getSuppliers().subscribe(list => {
+      console.log(list);
       this.originalSuppliers = list;
       this.dataSource.data = list;
       // Conexão inicial do paginador pode ser tentada aqui se o paginator já estiver disponível,
@@ -95,8 +96,8 @@ export class SupplierListComponent implements OnInit, AfterViewInit { // Impleme
       this.dataSource.data = this.originalSuppliers.filter(supplier =>
       (supplier.nome_fornecedor?.toLowerCase().includes(filterText) ||
         supplier.cpf_cnpj_fornecedor?.toLowerCase().includes(filterText) ||
-        supplier.email?.toLowerCase().includes(filterText) ||
-        supplier.telefone?.toLowerCase().includes(filterText))
+        supplier.email_fornecedor?.toLowerCase().includes(filterText) ||
+        supplier.telefone_fornecedor?.toLowerCase().includes(filterText))
       );
     }
 

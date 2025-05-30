@@ -76,9 +76,9 @@ export interface Supplier {
   id: string;
   cpf_cnpj_fornecedor: string;
   nome_fornecedor: string;
-  telefone: string;
-  email: string;
-  endereco: string;
+  telefone_fornecedor: string;
+  email_fornecedor: string;
+  endereco_fornecedor: string;
 }
 
 export interface Product {
@@ -143,7 +143,10 @@ export class ApiService {
   }
 
   getCompany(cnpj_empresa: string): Observable<Company> {
-    return this.http.get<Company>(`${this.baseUrl}/empresa/${cnpj_empresa}`);
+    const cleanedCnpj = cnpj_empresa.replace(/\D/g, '');
+    const encodedCnpj = encodeURIComponent(cleanedCnpj);
+    console.log(encodedCnpj);
+    return this.http.get<Company>(`${this.baseUrl}/empresa/${encodedCnpj}`);
   }
 
   createCompany(company: Omit<Company, 'id'>): Observable<Company> {
