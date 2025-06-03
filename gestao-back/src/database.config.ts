@@ -7,6 +7,7 @@ import { Empresa } from "./Empresa/entity/empresa.entity";
 import { Fornecedor } from "./Fornecedor/entity/fornecedor.entity";
 import { Produto } from "./Produto/entity/produto.entity";
 import { DataSource } from 'typeorm';
+import { AuthData } from "./Auth/entity/auth-data.entity";
 
 const dataSourceOptions = new DataSource({
     type: 'postgres',
@@ -23,7 +24,8 @@ const dataSourceOptions = new DataSource({
         Pedido,
         Empresa,
         Fornecedor,
-        Produto
+        Produto,
+        AuthData,
     ], // Entidades
     synchronize: true, // Sincroniza o esquema do banco de dados, apenas para desenvolvimento
     logging: true, //Ativa logs para visualizarmos possíveis erros,

@@ -12,19 +12,21 @@ import { PedidoModule } from './Pedido/pedido.module';
 import { EmpresaModule } from './Empresa/empresa.module';
 import { FornecedorModule } from './Fornecedor/fornecedor.module';
 import { ProdutoModule } from './Produto/produto.module';
+import { AuthModule } from './Auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(dataSourceOptions.options),
     ClienteModule,
-    FormaPagamentoModule, 
+    FormaPagamentoModule,
     FuncionarioModule,
     ItemProdutoModule,
     PedidoModule,
     EmpresaModule,
     FornecedorModule,
-    ProdutoModule
+    ProdutoModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
