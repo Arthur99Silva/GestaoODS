@@ -30,8 +30,9 @@
     <!-- CPF -->
     <ng-container matColumnDef="cpf_cnpj">
       <th mat-header-cell *matHeaderCellDef>CPF/CNPJ</th>
-      <td mat-cell *matCellDef="let c">{{ c.cpf_cnpj }}</td>
+      <td mat-cell *matCellDef="let c">{{ formatCpfCnpjForDisplay(c.cpf_cnpj) }}</td>
     </ng-container>
+
 
     <!-- E-mail -->
     <ng-container matColumnDef="email">

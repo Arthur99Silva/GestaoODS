@@ -74,6 +74,70 @@ export class CustomerFormComponent implements OnInit {
         }
       });
     }
+
+    const routeCpfCnpj = this.route.snapshot.paramMap.get('cpf_cnpj');
+    if (routeCpfCnpj) {
+      this.isLoading = true;
+      this.isEdit = true;
+      this.cpf_cnpj = routeCpfCnpj;
+      this.api.getCustomer(this.cpf_cnpj).subscribe({
+        next: (cust) => {
+          const customerData = { ...cust };
+          if (customerData.cpf_cnpj) {
+            if (customerData.cpf_cnpj.length <= 11) {
+              customerData.cpf_cnpj = this.applyCpfMask(String(customerData.cpf_cnpj));
+            } else if (customerData.cpf_cnpj.length > 11) {
+              customerData.cpf_cnpj = this.applyCnpjMask(String(customerData.cpf_cnpj));
+            }
+          }
+          this.form.patchValue(customerData);
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.showError('Erro ao carregar venda');
+          this.isLoading = false;
+        }
+      });
+    }
+  }
+
+  private applyCnpjMask(cnpj: string): string {
+    const numericCnpj = cnpj.replace(/\D/g, '').substring(0, 14); // Remove não numéricos e limita a 14 dígitos
+
+    if (numericCnpj.length === 0) {
+      return '';
+    }
+    if (numericCnpj.length <= 2) {
+      return numericCnpj;
+    }
+    if (numericCnpj.length <= 5) {
+      return `${numericCnpj.substring(0, 2)}.${numericCnpj.substring(2)}`;
+    }
+    if (numericCnpj.length <= 8) {
+      return `${numericCnpj.substring(0, 2)}.${numericCnpj.substring(2, 5)}.${numericCnpj.substring(5)}`;
+    }
+    if (numericCnpj.length <= 12) {
+      return `${numericCnpj.substring(0, 2)}.${numericCnpj.substring(2, 5)}.${numericCnpj.substring(5, 8)}/${numericCnpj.substring(8)}`;
+    }
+    return `${numericCnpj.substring(0, 2)}.${numericCnpj.substring(2, 5)}.${numericCnpj.substring(5, 8)}/${numericCnpj.substring(8, 12)}-${numericCnpj.substring(12, 14)}`;
+  }
+
+  private applyCpfMask(cpf: string): string {
+    const numericCpf = cpf.replace(/\D/g, '').substring(0, 11); // Remove non-digits and limit to 11 characters
+
+    if (numericCpf.length === 0) {
+      return '';
+    }
+    if (numericCpf.length <= 3) {
+      return numericCpf;
+    }
+    if (numericCpf.length <= 6) {
+      return `${numericCpf.substring(0, 3)}.${numericCpf.substring(3)}`;
+    }
+    if (numericCpf.length <= 9) {
+      return `${numericCpf.substring(0, 3)}.${numericCpf.substring(3, 6)}.${numericCpf.substring(6)}`;
+    }
+    return `${numericCpf.substring(0, 3)}.${numericCpf.substring(3, 6)}.${numericCpf.substring(6, 9)}-${numericCpf.substring(9, 11)}`;
   }
 
   // Validação CPF/CNPJ
@@ -123,11 +187,19 @@ export class CustomerFormComponent implements OnInit {
 
     this.isLoading = true;
 
-    console.log(this.form.value);
+    // Cria uma cópia dos dados do formulário para manipulação
+    const formData = { ...this.form.value };
+
+    // Limpa o CNPJ: remove a pontuação para enviar apenas números
+    if (formData.cpf_cnpj) {
+      formData.cpf_cnpj = String(formData.cpf_cnpj).replace(/\D/g, '');
+    }
+
+    console.log(formData);
 
     const obs = this.isEdit
-      ? this.api.updateCustomer(this.cpf_cnpj!, this.form.value)
-      : this.api.createCustomer(this.form.value);
+      ? this.api.updateCustomer(this.cpf_cnpj!, formData)
+      : this.api.createCustomer(formData);
 
     obs.subscribe({
       next: (cliente: Customer) => {
