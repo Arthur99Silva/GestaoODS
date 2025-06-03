@@ -128,6 +128,7 @@ export class EmployeeFormComponent implements OnInit {
       });
       return;
     }
+    console.log(this.form.value)
   
     const obs = this.isEdit
       ? this.api.updateEmployee(this.cpf!, this.form.value)

@@ -61,7 +61,7 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
       qtd_produto: ['', [Validators.required, Validators.min(0)]],
       valor_custo: ['', [Validators.required, Validators.min(0)]],
       valor_venda: ['', [Validators.required, Validators.min(0)]],
-      cpf_cnpj_fornecedor: ['', Validators.required]
+      fk_cpf_cnpj_fornecedor: ['', Validators.required]
     });
 
     // Inicializa o formulário de filtros
@@ -152,7 +152,7 @@ export class ProductManagementComponent implements OnInit, OnDestroy {
     }
 
     const productData = this.productForm.value;
-
+    console.log(productData);
     if (this.editingProductId !== null) {
       this.api.updateProduct(this.editingProductId, productData).pipe(takeUntil(this.destroy$)).subscribe({
         next: () => {

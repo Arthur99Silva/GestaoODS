@@ -9,7 +9,7 @@
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>CNPJ</mat-label>
-        <input matInput formControlName="cnpj_empresa" />
+        <input matInput formControlName="cnpj_empresa" (input)="formatCnpjOnInput($event)" placeholder="XX.XXX.XXX/XXXX-XX">
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
@@ -24,7 +24,15 @@
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Telefone</mat-label>
-        <input matInput formControlName="telefone" />
+        <input matInput formControlName="telefone" 
+               (input)="formatPhone($event)"
+               placeholder="(XX) XXXX-XXXX" />
+        <mat-error *ngIf="form.get('telefone')?.hasError('required')">
+          Telefone é obrigatório
+        </mat-error>
+        <mat-error *ngIf="form.get('telefone')?.hasError('pattern')">
+          Formato: (XX) XXXXX-XXXX
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
