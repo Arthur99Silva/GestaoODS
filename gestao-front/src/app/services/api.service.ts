@@ -1,6 +1,6 @@
 // src/app/services/api.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // Importe HttpHeaders
 import { delay, Observable, of } from 'rxjs';
 
 export interface User {
@@ -102,12 +102,47 @@ export interface Payment {
 })
 export class ApiService {
   private baseUrl = 'http://localhost:3000';
+  // Você pode optar por armazenar o token no serviço também
+  // private authToken: string | null = null;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    // Exemplo: carregar o token do localStorage ao iniciar o serviço
+    // this.authToken = localStorage.getItem('yourAuthTokenKey');
+  }
+
+  // Função auxiliar para obter o token e criar os cabeçalhos
+  private getAuthHeaders(): HttpHeaders {
+    // Obtenha o token de onde você o armazena (localStorage, uma variável no serviço, etc.)
+    // Substitua 'authToken' pela chave real que você usa para armazenar o token
+    const token = localStorage.getItem('authToken');
+
+    if (token) {
+      return new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      });
+    }
+    return new HttpHeaders(); // Retorna cabeçalhos vazios se não houver token
+  }
+
+  /*
+  // Se você armazenar o token no serviço, pode ter métodos como:
+  setToken(token: string): void {
+    this.authToken = token;
+    localStorage.setItem('authToken', token); // Opcional: persistir
+  }
+
+  clearToken(): void {
+    this.authToken = null;
+    localStorage.removeItem('authToken'); // Opcional: limpar persistência
+  }
+  */
 
   // === Autenticação ===
+  // Login e Register geralmente não enviam o token Bearer, mas sim o recebem ou não precisam dele.
   login(payload: { email: string; password: string }): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.baseUrl}/auth/login`, payload);
+    // Após o login bem-sucedido, você armazenaria o token recebido. Ex:
+    // .pipe(tap(response => this.setToken(response.token)))
   }
 
   registerUser(user: User): Observable<User> {
@@ -116,144 +151,175 @@ export class ApiService {
 
   // === Clientes ===
   getCustomers(): Observable<Customer[]> {
-    return this.http.get<Customer[]>(`${this.baseUrl}/clientes`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<Customer[]>(`${this.baseUrl}/clientes`, { headers });
   }
 
   getCustomer(cpf: string): Observable<Customer> {
-    return this.http.get<Customer>(`${this.baseUrl}/clientes/${cpf}`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<Customer>(`${this.baseUrl}/clientes/${cpf}`, { headers });
   }
 
   createCustomer(customer: Omit<Customer, 'id'>): Observable<Customer> {
-    return this.http.post<Customer>(`${this.baseUrl}/clientes`, customer);
+    const headers = this.getAuthHeaders();
+    return this.http.post<Customer>(`${this.baseUrl}/clientes`, customer, { headers });
   }
 
   updateCustomer(cpf: string, customer: Partial<Omit<Customer, 'id'>>): Observable<Customer> {
-    return this.http.patch<Customer>(`${this.baseUrl}/clientes/${cpf}`, customer);
+    const headers = this.getAuthHeaders();
+    return this.http.patch<Customer>(`${this.baseUrl}/clientes/${cpf}`, customer, { headers });
   }
 
   deleteCustomer(cpf: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/clientes/${cpf}`);
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(`${this.baseUrl}/clientes/${cpf}`, { headers });
   }
 
   // === Empresas ===
   getCompanies(): Observable<Company[]> {
-    return this.http.get<Company[]>(`${this.baseUrl}/empresa`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<Company[]>(`${this.baseUrl}/empresa`, { headers });
   }
 
   getCompany(cnpj_empresa: string): Observable<Company> {
+    const headers = this.getAuthHeaders();
     const cleanedCnpj = cnpj_empresa.replace(/\D/g, '');
     const encodedCnpj = encodeURIComponent(cleanedCnpj);
     console.log(encodedCnpj);
-    return this.http.get<Company>(`${this.baseUrl}/empresa/${encodedCnpj}`);
+    return this.http.get<Company>(`${this.baseUrl}/empresa/${encodedCnpj}`, { headers });
   }
 
   createCompany(company: Omit<Company, 'id'>): Observable<Company> {
-    return this.http.post<Company>(`${this.baseUrl}/empresa`, company);
+    const headers = this.getAuthHeaders();
+    return this.http.post<Company>(`${this.baseUrl}/empresa`, company, { headers });
   }
 
   updateCompany(cnpj_empresa: string, company: Partial<Omit<Company, 'id'>>): Observable<Company> {
-    return this.http.patch<Company>(`${this.baseUrl}/empresa/${cnpj_empresa}`, company);
+    const headers = this.getAuthHeaders();
+    return this.http.patch<Company>(`${this.baseUrl}/empresa/${cnpj_empresa}`, company, { headers });
   }
 
   deleteCompany(cnpj_empresa: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/empresa/${cnpj_empresa}`);
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(`${this.baseUrl}/empresa/${cnpj_empresa}`, { headers });
   }
 
   // === Funcionários ===
-
   getEmployees(): Observable<Employee[]> {
-    return this.http.get<Employee[]>(`${this.baseUrl}/funcionario`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<Employee[]>(`${this.baseUrl}/funcionario`, { headers });
   }
 
   getEmployee(cpf: string): Observable<Employee> {
-    return this.http.get<Employee>(`${this.baseUrl}/funcionario/${cpf}`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<Employee>(`${this.baseUrl}/funcionario/${cpf}`, { headers });
   }
 
   createEmployee(emp: Omit<Employee, 'id'>): Observable<Employee> {
-    return this.http.post<Employee>(`${this.baseUrl}/funcionario`, emp);
+    const headers = this.getAuthHeaders();
+    return this.http.post<Employee>(`${this.baseUrl}/funcionario`, emp, { headers });
   }
 
   updateEmployee(cpf: string, emp: Partial<Omit<Employee, 'id'>>): Observable<Employee> {
-    return this.http.patch<Employee>(`${this.baseUrl}/funcionario/${cpf}`, emp);
+    const headers = this.getAuthHeaders();
+    return this.http.patch<Employee>(`${this.baseUrl}/funcionario/${cpf}`, emp, { headers });
   }
 
   deleteEmployee(cpf: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/funcionario/${cpf}`);
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(`${this.baseUrl}/funcionario/${cpf}`, { headers });
   }
 
   // === Pedidos ===
   getSales(): Observable<Sales[]> {
-    return this.http.get<Sales[]>(`${this.baseUrl}/pedido`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<Sales[]>(`${this.baseUrl}/pedido`, { headers });
   }
 
   getSale(id: string): Observable<Sales> {
-    return this.http.get<Sales>(`${this.baseUrl}/pedido/${id}`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<Sales>(`${this.baseUrl}/pedido/${id}`, { headers });
   }
 
   createSales(sales: Omit<Sales, 'id'>): Observable<Sales> {
-    return this.http.post<Sales>(`${this.baseUrl}/pedido`, sales);
+    const headers = this.getAuthHeaders();
+    return this.http.post<Sales>(`${this.baseUrl}/pedido`, sales, { headers });
   }
 
   updateSales(id: string, sales: Partial<Omit<Sales, 'id'>>): Observable<Sales> {
-    return this.http.patch<Sales>(`${this.baseUrl}/pedido/${id}`, sales);
+    const headers = this.getAuthHeaders();
+    return this.http.patch<Sales>(`${this.baseUrl}/pedido/${id}`, sales, { headers });
   }
 
   deleteSales(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/pedido/${id}`);
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(`${this.baseUrl}/pedido/${id}`, { headers });
   }
 
   // === Fornecedores ===
   getSuppliers(): Observable<Supplier[]> {
-    return this.http.get<Supplier[]>(`${this.baseUrl}/fornecedor`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<Supplier[]>(`${this.baseUrl}/fornecedor`, { headers });
   }
 
   getSupplier(cpf_cnpj_fornecedor: string): Observable<Supplier> {
-    return this.http.get<Supplier>(`${this.baseUrl}/fornecedor/${cpf_cnpj_fornecedor}`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<Supplier>(`${this.baseUrl}/fornecedor/${cpf_cnpj_fornecedor}`, { headers });
   }
 
   createSupplier(supplier: Omit<Supplier, 'id'>): Observable<Supplier> {
-    return this.http.post<Supplier>(`${this.baseUrl}/fornecedor`, supplier);
+    const headers = this.getAuthHeaders();
+    return this.http.post<Supplier>(`${this.baseUrl}/fornecedor`, supplier, { headers });
   }
 
   updateSupplier(cpf_cnpj_fornecedor: string, supplier: Partial<Omit<Supplier, 'id'>>): Observable<Supplier> {
-    return this.http.patch<Supplier>(`${this.baseUrl}/fornecedor/${cpf_cnpj_fornecedor}`, supplier);
+    const headers = this.getAuthHeaders();
+    return this.http.patch<Supplier>(`${this.baseUrl}/fornecedor/${cpf_cnpj_fornecedor}`, supplier, { headers });
   }
 
   deleteSupplier(cpf_cnpj_fornecedor: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/fornecedor/${cpf_cnpj_fornecedor}`);
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(`${this.baseUrl}/fornecedor/${cpf_cnpj_fornecedor}`, { headers });
   }
 
-  // Existing method, will now use the updated Product interface within SupplierWithProducts
   getSupplierProducts(cpf_cnpj: string): Observable<SupplierWithProducts> {
-    // Ensure this endpoint in your NestJS backend returns products matching the new Product interface
-    return this.http.get<SupplierWithProducts>(`${this.baseUrl}/fornecedores/${cpf_cnpj}/produtos`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<SupplierWithProducts>(`${this.baseUrl}/fornecedores/${cpf_cnpj}/produtos`, { headers });
   }
 
   // === Produtos ===
   getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.baseUrl}/produtos`); // Assuming endpoint is /produtos
+    const headers = this.getAuthHeaders();
+    return this.http.get<Product[]>(`${this.baseUrl}/produtos`, { headers });
   }
 
   getProduct(id_produto: number): Observable<Product> {
-    return this.http.get<Product>(`${this.baseUrl}/produtos/${id_produto}`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<Product>(`${this.baseUrl}/produtos/${id_produto}`, { headers });
   }
 
   createProduct(product: Omit<Product, 'id_produto'>): Observable<Product> {
-    return this.http.post<Product>(`${this.baseUrl}/produtos`, product);
+    const headers = this.getAuthHeaders();
+    return this.http.post<Product>(`${this.baseUrl}/produtos`, product, { headers });
   }
 
   updateProduct(id_produto: number, product: Partial<Omit<Product, 'id_produto'>>): Observable<Product> {
-    return this.http.patch<Product>(`${this.baseUrl}/produtos/${id_produto}`, product);
+    const headers = this.getAuthHeaders();
+    return this.http.patch<Product>(`${this.baseUrl}/produtos/${id_produto}`, product, { headers });
   }
 
   deleteProduct(id_produto: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/produtos/${id_produto}`);
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(`${this.baseUrl}/produtos/${id_produto}`, { headers });
   }
 
   // Forma Pagamento
   getPayments(): Observable<Payment[]> {
-    //return this.http.get<Payment[]>(`${this.baseUrl}/pagamento}`);
-    // Mock data
+    // Se este endpoint for protegido, adicione os headers também:
+    // const headers = this.getAuthHeaders();
+    // return this.http.get<Payment[]>(`${this.baseUrl}/pagamento`, { headers });
+
+    // Mock data atual não precisa de cabeçalho
     const mockPayments: Payment[] = [
       { id_forma_pagamento: '1', nome_forma_pagamento: 'Cartão de Crédito' },
       { id_forma_pagamento: '2', nome_forma_pagamento: 'Cartão de Débito' },
@@ -262,8 +328,6 @@ export class ApiService {
       { id_forma_pagamento: '5', nome_forma_pagamento: 'Boleto Bancário' },
       { id_forma_pagamento: '6', nome_forma_pagamento: 'Transferência Bancária' }
     ];
-
-    // Simulate API delay
     return of(mockPayments).pipe(delay(500));
   }
 }

@@ -20,6 +20,7 @@ export class ItemProdutoService {
     private readonly PedidoRepository: Repository<Pedido>,
   ) { }
 
+  /*
   async create(dto: CreateItemProdutoDto): Promise<ItemProduto> {
     // Buscar Produto pelo id passado na DTO
     const produto = await this.ProdutoRepository.findOneBy({ id_produto: dto.fk_produto });
@@ -41,7 +42,7 @@ export class ItemProdutoService {
     });
 
     return this.itemProdutoRepository.save(item);
-  }
+  }*/
 
   async findAll(): Promise<ItemProduto[]> {
     return this.itemProdutoRepository.find();
