@@ -14,6 +14,7 @@ export class CreateItemProdutoDto {
 
   @IsOptional()
   @IsInt()
-  @Expose({ name: 'fk_pedido' })
-  fk_pedido: number;
+  @Expose({ name: 'qtd_item_produto' })
+  qtd_item_produto: number;
+  
 }
