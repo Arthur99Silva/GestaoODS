@@ -8,7 +8,7 @@ export class FormaPagamentoSeedService implements OnModuleInit {
   constructor(
     @InjectRepository(FormaPagamento)
     private readonly formaPagamentoRepository: Repository<FormaPagamento>,
-  ) {}
+  ) { }
 
   async onModuleInit() {
     const count = await this.formaPagamentoRepository.count();
@@ -23,4 +23,6 @@ export class FormaPagamentoSeedService implements OnModuleInit {
       console.log('Dados iniciais inseridos na tabela FormaPagamento!');
     }
   }
+
+
 }
