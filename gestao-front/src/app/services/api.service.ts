@@ -4,8 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { delay, Observable, of } from 'rxjs';
 
 export interface User {
-  id?: string;
-  name: string;
   email: string;
   password?: string;
 }

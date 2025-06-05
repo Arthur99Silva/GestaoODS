@@ -27,7 +27,7 @@ export class AuthController {
     return result; //{ token: '...' }
   }
 
-  @Post()
+  @Post('register')
   async create(@Body() dto: CreateAuthDto) {
     return this.authService.create(dto);
   }
