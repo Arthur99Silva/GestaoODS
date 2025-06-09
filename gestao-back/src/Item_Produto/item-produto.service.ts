@@ -15,9 +15,6 @@ export class ItemProdutoService {
 
     @InjectRepository(Produto)
     private readonly ProdutoRepository: Repository<Produto>,
-
-    @InjectRepository(Pedido)
-    private readonly PedidoRepository: Repository<Pedido>,
   ) { }
 
   /*

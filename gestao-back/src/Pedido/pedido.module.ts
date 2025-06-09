@@ -12,10 +12,12 @@ import { ItemProdutoModule } from "src/Item_Produto/item-produto.module";
 import { FormaPagamento } from "src/Forma_Pagamento/entite/forma-pagamento.entity";
 import { FormaPagamentoModule } from "src/Forma_Pagamento/forma-pagamento.module";
 
+
 @Module({
-    imports: [TypeOrmModule.forFeature([Pedido, Cliente, Funcionario, FormaPagamento]), 
-    ClienteModule, FuncionarioModule, FormaPagamentoModule],
+    imports: [TypeOrmModule.forFeature([Pedido, Cliente, Funcionario, FormaPagamento, ItemProduto]), 
+    ClienteModule, FuncionarioModule, FormaPagamentoModule, ItemProdutoModule],
     controllers: [PedidoController],
     providers: [PedidoService],
+    exports: [PedidoService],
 })
 export class PedidoModule {}
