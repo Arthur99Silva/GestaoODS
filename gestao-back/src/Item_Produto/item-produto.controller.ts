@@ -17,11 +17,13 @@ import { JwtAuthGuard } from 'src/Auth/jwt-auth.guard';
 export class ItemProdutoController {
   constructor(private readonly itemProdutoService: ItemProdutoService) {}
 
+  /*
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createItemProdutoDto: CreateItemProdutoDto) {
     return this.itemProdutoService.create(createItemProdutoDto);
   }
+  */
 
   @UseGuards(JwtAuthGuard)
   @Get()
