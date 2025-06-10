@@ -1,20 +1,15 @@
+// gestao-front/src/app/auth/auth.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { ReactiveFormsModule } from '@angular/forms';
 import { AuthRoutingModule } from './auth-routing.module';
 
-// importe os componentes standalone
-import { LoginComponent } from './login/login.component';
-import { RegisterUserComponent } from './register-user/register-user.component';
-
 @NgModule({
-  // não há mais 'declarations'
+  declarations: [],
   imports: [
     CommonModule,
-    AuthRoutingModule,
-    // aqui entram os standalone components
-    LoginComponent,
-    RegisterUserComponent
+    ReactiveFormsModule,
+    AuthRoutingModule
   ]
 })
 export class AuthModule { }

@@ -2,15 +2,18 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  // Pega o token do localStorage
+  // =================================================================
+  // PASSO DE DIAGNÓSTICO: Adicione este console.log
+  console.log(`[AuthInterceptor] Interceptando a requisição para: ${req.url}`);
+  // =================================================================
+
   const token = localStorage.getItem('token');
 
-  // Se não houver token, continua a requisição sem modificá-la
   if (!token) {
+    // Se não há token, o interceptor termina aqui para esta requisição.
     return next(req);
   }
 
-  // Se houver token, clona a requisição e adiciona o cabeçalho de autorização
   const reqWithAuth = req.clone({
     headers: req.headers.set('Authorization', `Bearer ${token}`),
   });
