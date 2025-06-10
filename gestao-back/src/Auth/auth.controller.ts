@@ -8,23 +8,28 @@ import {
   Param,
   UseGuards,
   Patch,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Get(':email/:senha')
-  async login(@Param('email') email: string, @Param('senha') senha: string) {
-    const result = await this.authService.login(email, senha);
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  // Este método agora usa o LoginDto importado, que contém os decorators de validação.
+  async login(@Body() dto: LoginDto) {
+    const result = await this.authService.login(dto.email, dto.senha);
     if (!result) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
-    return result; //{ token: '...' }
+    return result;
   }
 
   @Post('register')

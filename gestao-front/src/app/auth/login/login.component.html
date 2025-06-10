@@ -9,8 +9,8 @@
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Senha</mat-label>
-      <input matInput formControlName="password" type="password" />
-      <mat-error *ngIf="loginForm.get('password')?.invalid">Senha obrigatória</mat-error>
+      <input matInput formControlName="senha" type="password" />
+      <mat-error *ngIf="loginForm.get('senha')?.invalid">Senha obrigatória</mat-error>
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit" class="full-width">Entrar</button>

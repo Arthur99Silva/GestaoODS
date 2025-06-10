@@ -2,12 +2,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule
+  FormBuilder, //
+  FormGroup, //
+  Validators, //
+  ReactiveFormsModule //
 } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';        // <-- importe RouterLink
+import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { ApiService } from '../../services/api.service';
@@ -19,42 +19,50 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  standalone: true,
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  standalone: true, //
+  selector: 'app-login', //
+  templateUrl: './login.component.html', //
+  styleUrls: ['./login.component.css'], //
   imports: [
-    CommonModule,            // *ngIf, *ngFor
-    ReactiveFormsModule,     // formGroup, formControlName
-    RouterLink,              // roteamento em <a routerLink>
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule
+    CommonModule,            //
+    ReactiveFormsModule,     //
+    RouterLink,              //
+    MatCardModule, //
+    MatFormFieldModule, //
+    MatInputModule, //
+    MatButtonModule //
   ]
 })
 export class LoginComponent implements OnInit {
-  loginForm!: FormGroup;
+  loginForm!: FormGroup; //
 
   constructor(
-    private fb: FormBuilder,
-    private api: ApiService,
-    private router: Router
+    private fb: FormBuilder, //
+    private api: ApiService, //
+    private router: Router //
   ) {}
 
   ngOnInit() {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+    this.loginForm = this.fb.group({ //
+      email: ['', [Validators.required, Validators.email]], //
+      senha: ['', Validators.required] //
     });
   }
 
   onSubmit() {
+    console.log('Enviando para a API:', this.loginForm.value);
+  
     if (this.loginForm.invalid) return;
+  
     this.api.login(this.loginForm.value).subscribe({
-      next: () => this.router.navigate(['/home']),
+      next: (response: any) => {
+        localStorage.setItem('token', response.token);
+        this.router.navigate(['/home']);
+      },
+      // AJUSTE APLICADO AQUI:
       error: (err: HttpErrorResponse) => {
-        console.error('Erro no login:', err.message);
+        // Trocamos err.message por err.error.message para ver o detalhe do NestJS
+        console.error('Erro detalhado do backend:', err.error.message);
       }
     });
   }

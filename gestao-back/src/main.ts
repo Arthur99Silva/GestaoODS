@@ -14,7 +14,7 @@ async function bootstrap() {
     allowedHeaders: '*',
     Credentials: true,
   });
-
+  
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,               // Permite transformar payloads em instâncias de classes

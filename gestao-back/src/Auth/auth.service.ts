@@ -1,5 +1,5 @@
 // src/Auth/auth.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthData } from './entity/auth-data.entity';
 import { Repository } from 'typeorm';
@@ -14,10 +14,13 @@ export class AuthService {
     private authRepo: Repository<AuthData>,
   ) {}
 
-  async login(email: string, senha: string): Promise<{ token: string } | null> {
+
+  async login(email: string, senha: string): Promise<{ token: string }> {
     const user = await this.authRepo.findOneBy({ email, senha });
 
-    if (!user) return null;
+    if (!user) {
+      throw new UnauthorizedException('Credenciais inválidas');
+    }
 
     const payload = { email: user.email };
     const token = jwt.sign(payload, 'segredo_super_secreto', {
@@ -26,6 +29,7 @@ export class AuthService {
 
     return { token };
   }
+
 
   async create(dto: CreateAuthDto): Promise<AuthData> {
     const novoAuth = this.authRepo.create(dto);
