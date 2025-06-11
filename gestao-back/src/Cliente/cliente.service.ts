@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cliente } from './entite/cliente.entity';
 import { Repository } from 'typeorm';
+import { UpdateClienteDto } from './dto/update-cliente.dto';
 
 @Injectable()
 export class ClienteService {
@@ -18,13 +19,20 @@ export class ClienteService {
     return this.clienteRepository.find();
   }
 
-  findOne(cpf_cnpj: string) {
-    return this.clienteRepository.findOne({ where: { cpf_cnpj } });
+  async findOne(cpf_cnpj: string): Promise<Cliente> {
+    const forma = await this.clienteRepository.findOne({
+     where: { cpf_cnpj },
+    });
+    if (!forma) {
+      throw new NotFoundException(`Cliente ${cpf_cnpj} não encontrado.`);
+    }
+    return forma;
   }
 
-  async update(cpf_cnpj: string, update: Cliente) {
-    await this.clienteRepository.update(cpf_cnpj, update);
-    return this.findOne(cpf_cnpj);
+  async update(cpf_cnpj: string, dto: UpdateClienteDto): Promise<Cliente> {
+    const forma = await this.findOne(cpf_cnpj);
+    const updated = Object.assign(forma, dto);
+    return this.clienteRepository.save(updated);
   }
 
 }

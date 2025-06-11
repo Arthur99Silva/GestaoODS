@@ -17,9 +17,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
-
-// Importações para o Paginator
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 function getPortuguesePaginatorIntl() {
   const paginatorIntl = new MatPaginatorIntl();
@@ -52,13 +51,15 @@ function getPortuguesePaginatorIntl() {
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatPaginatorModule, // Adicionado MatPaginatorModule
+    MatPaginatorModule,
+    MatSort,
+    MatSortModule
   ],
   providers: [
     CurrencyPipe,
     DatePipe,
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
-    {provide: MatPaginatorIntl, useValue: getPortuguesePaginatorIntl()}
+    { provide: MatPaginatorIntl, useValue: getPortuguesePaginatorIntl() }
   ]
 })
 export class SalesListComponent implements OnInit, AfterViewInit { // Implementa AfterViewInit
@@ -75,27 +76,29 @@ export class SalesListComponent implements OnInit, AfterViewInit { // Implementa
   // Referência ao MatPaginator no template
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  @ViewChild(MatSort) sort!: MatSort;
+
   constructor(private api: ApiService, private datePipe: DatePipe) { }
 
   ngOnInit() {
     this.api.getSales().subscribe(list => {
       this.originalData = list;
       this.dataSource.data = this.originalData;
-      // O paginador será conectado em ngAfterViewInit ou quando os dados estiverem prontos
-      // Se o paginator já estiver disponível, podemos tentar conectá-lo aqui também
       if (this.paginator) {
         this.dataSource.paginator = this.paginator;
+      }
+      if (this.sort) {
+        this.dataSource.sort = this.sort;
       }
     });
   }
 
   ngAfterViewInit() {
-    // Conecta o paginador ao dataSource após a view ser inicializada
-    // Isso garante que o paginator está disponível
-    if (this.dataSource.data.length > 0 && !this.dataSource.paginator) {
+    if (this.paginator) {
       this.dataSource.paginator = this.paginator;
-    } else if (!this.dataSource.paginator && this.paginator) { // Caso os dados cheguem depois
-      this.dataSource.paginator = this.paginator;
+    }
+    if (this.sort) {
+      this.dataSource.sort = this.sort;
     }
   }
 

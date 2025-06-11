@@ -246,16 +246,9 @@ export class SalesFormComponent implements OnInit {
 
   private convertToBackendFormat(date: Date): string {
     if (!date) return '';
+    const nextDay = new Date(date);
+    nextDay.setDate(nextDay.getDate() + 1);
 
-    const utcDate = new Date(
-      Date.UTC(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        0, 0, 0, 0
-      )
-    );
-
-    return utcDate.toISOString();
+    return nextDay.toISOString().split('T')[0] + 'T00:00:00.000Z';
   }
 }
