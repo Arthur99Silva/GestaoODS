@@ -39,3 +39,42 @@ mat-progress-bar {
   left: 0;
   right: 0;
 }
+
+/* Add to your component's CSS */
+.product-selection {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  margin: 20px 0;
+}
+
+.product-field {
+  flex: 2;
+}
+
+.quantity-field {
+  flex: 1;
+  max-width: 120px;
+}
+
+.selected-items {
+  margin: 20px 0;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Adjust table styles */
+.mat-table {
+  width: 100%;
+}
+
+.mat-column-quantity {
+  width: 120px;
+}
+
+.mat-column-actions {
+  width: 60px;
+  text-align: center;
+}

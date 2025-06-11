@@ -25,6 +25,10 @@ export interface Sales {
   fk_cpf_cnpj_cliente: string;
   fk_forma_pagamento: number;
   fk_cpf_funcionario: string;
+  itens: {
+    fk_produto: number;
+    qtd_item_produto: number;
+  };
   cliente: {
     cpf_cnpj: string;
     nome: string;
@@ -103,7 +107,7 @@ export interface Payment {
 export class ApiService {
   private baseUrl = 'http://localhost:3000';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // === Autenticação ===
   login(payload: { email: string; password: string }): Observable<{ token: string }> {
@@ -188,6 +192,14 @@ export class ApiService {
     return this.http.get<Sales>(`${this.baseUrl}/pedido/${id}`);
   }
 
+  getSalesbyClient(cpf_cnpj: string): Observable<Sales[]> {
+    return this.http.get<Sales[]>(`${this.baseUrl}/pedido/cliente/${cpf_cnpj}`)
+  }
+
+  getSalesbyDate(): Observable<Sales[]> {
+    return this.http.get<Sales[]>(`${this.baseUrl}/pedido/data`);
+  }
+
   createSales(sales: Omit<Sales, 'id'>): Observable<Sales> {
     return this.http.post<Sales>(`${this.baseUrl}/pedido`, sales);
   }
@@ -227,34 +239,33 @@ export class ApiService {
 
   // === Produtos ===
   getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.baseUrl}/produtos`);
+    return this.http.get<Product[]>(`${this.baseUrl}/produto`);
   }
 
   getProduct(id_produto: number): Observable<Product> {
-    return this.http.get<Product>(`${this.baseUrl}/produtos/${id_produto}`);
+    return this.http.get<Product>(`${this.baseUrl}/produto/${id_produto}`);
   }
 
   createProduct(product: Omit<Product, 'id_produto'>): Observable<Product> {
-    return this.http.post<Product>(`${this.baseUrl}/produtos`, product);
+    return this.http.post<Product>(`${this.baseUrl}/produto`, product);
   }
 
   updateProduct(id_produto: number, product: Partial<Omit<Product, 'id_produto'>>): Observable<Product> {
-    return this.http.patch<Product>(`${this.baseUrl}/produtos/${id_produto}`, product);
+    return this.http.patch<Product>(`${this.baseUrl}/produto/${id_produto}`, product);
   }
 
   deleteProduct(id_produto: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/produtos/${id_produto}`);
+    return this.http.delete<void>(`${this.baseUrl}/produto/${id_produto}`);
   }
 
   // === Forma Pagamento ===
   getPayments(): Observable<Payment[]> {
     const mockPayments: Payment[] = [
-      { id_forma_pagamento: '1', nome_forma_pagamento: 'Cartão de Crédito' },
-      { id_forma_pagamento: '2', nome_forma_pagamento: 'Cartão de Débito' },
-      { id_forma_pagamento: '3', nome_forma_pagamento: 'Dinheiro' },
+      { id_forma_pagamento: '1', nome_forma_pagamento: 'Dinheiro' },
+      { id_forma_pagamento: '2', nome_forma_pagamento: 'Cartão de Crédito' },
+      { id_forma_pagamento: '3', nome_forma_pagamento: 'Cartão de Débito' },
       { id_forma_pagamento: '4', nome_forma_pagamento: 'PIX' },
-      { id_forma_pagamento: '5', nome_forma_pagamento: 'Boleto Bancário' },
-      { id_forma_pagamento: '6', nome_forma_pagamento: 'Transferência Bancária' }
+      { id_forma_pagamento: '5', nome_forma_pagamento: 'Cheque' },
     ];
     return of(mockPayments).pipe(delay(500));
   }

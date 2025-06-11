@@ -70,7 +70,7 @@ export class SalesListComponent implements OnInit, AfterViewInit { // Implementa
   dataVendaFilter: Date | null = null;
 
   columns = ['valor_total', 'data_venda', 'nota_fiscal', 'fk_cpf_cnpj_cliente',
-    'nome_forma_pagamento', 'fk_cpf_funcionario', 'actions'];
+    'nome_forma_pagamento', 'fk_cpf_funcionario'];
 
   // Referência ao MatPaginator no template
   @ViewChild(MatPaginator) paginator!: MatPaginator;

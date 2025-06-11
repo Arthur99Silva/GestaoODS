@@ -21,6 +21,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Product } from '../../services/api.service';
+import { MatTableModule } from '@angular/material/table';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
@@ -39,7 +42,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSelectModule,
     MatSnackBarModule,
     MatProgressBarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatTableModule,
+    FormsModule
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -57,6 +62,10 @@ export class SalesFormComponent implements OnInit {
   payment_methods: Payment[] = [];
   employees: Employee[] = [];
 
+  products: Product[] = [];
+  selectedItems: { product: Product, quantity: number }[] = [];
+  displayedColumns: string[] = ['name', 'price', 'quantity', 'subtotal', 'actions'];
+
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
@@ -71,6 +80,7 @@ export class SalesFormComponent implements OnInit {
   ngOnInit() {
     this.initializeForm();
     this.loadDropdownData();
+    this.loadProducts();
 
     this.id = this.route.snapshot.paramMap.get('id') || undefined;
     if (this.id) {
@@ -136,9 +146,48 @@ export class SalesFormComponent implements OnInit {
     });
   }
 
+  private loadProducts() {
+    this.api.getProducts().subscribe({
+      next: (products) => {
+        this.products = products;
+      },
+      error: (err) => this.showError('Erro ao carregar produtos')
+    });
+  }
+
+  addItem(product: Product, quantity: number) {
+    if (!product) return;
+
+    const existing = this.selectedItems.find(item => item.product.id_produto === product.id_produto);
+
+    if (existing) {
+      existing.quantity += quantity;
+    } else {
+      this.selectedItems = [...this.selectedItems, { product, quantity }];
+    }
+
+    this.updateTotalValue();
+  }
+
+  removeItem(index: number) {
+    this.selectedItems.splice(index, 1);
+    this.selectedItems = [...this.selectedItems];  // force change detection
+    this.updateTotalValue();
+  }
+
+
+  updateTotalValue() {
+    const total = this.selectedItems.reduce((sum, item) => {
+      return sum + (item.product.valor_venda * item.quantity);
+    }, 0);
+
+    this.form.get('valor_total')?.setValue(total.toFixed(2));
+  }
+
+
   onSubmit() {
-    if (this.form.invalid) {
-      this.showError('Por favor, preencha todos os campos obrigatórios');
+    if (this.form.invalid || this.selectedItems.length === 0) {
+      this.showError('Por favor, preencha todos os campos e adicione pelo menos um item');
       return;
     }
 
@@ -147,8 +196,14 @@ export class SalesFormComponent implements OnInit {
       ...this.form.value,
       valor_total: parseFloat(this.form.value.valor_total),
       fk_forma_pagamento: parseInt(this.form.value.fk_forma_pagamento),
-      data_venda: this.convertToBackendFormat(this.form.value.data_venda)
+      data_venda: this.convertToBackendFormat(this.form.value.data_venda),
+      itens: this.selectedItems.map(item => ({
+        fk_produto: item.product.id_produto,
+        qtd_item_produto: item.quantity
+      }))
     };
+
+    console.log(formData);
 
     const obs = this.isEdit
       ? this.api.updateSales(this.id!, formData)
