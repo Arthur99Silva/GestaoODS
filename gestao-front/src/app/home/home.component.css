@@ -1,21 +1,113 @@
-.home-card {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 2rem;
-    text-align: center;
-  }
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 1.5rem;
-  }
-  .actions button {
-    min-width: 180px;
-  }
+/* Adicione ou atualize os estilos existentes com estes */
 
-  .actions button mat-icon {
-    vertical-align: middle;
-    margin-right: 8px;
-  }
+.home-card {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  text-align: center;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+.actions button {
+  min-width: 220px;
+}
+
+.actions button mat-icon {
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 2rem;
+  padding: 0 1rem;
+}
+
+.dashboard-card {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+.dashboard-card mat-card-header,
+.count-section {
+  cursor: pointer;
+}
+
+.count-section {
+  text-align: center;
+}
+
+.dashboard-card .count {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+  line-height: 1;
+}
+
+.dashboard-card .count + p {
+  margin: 0 0 1rem 0;
+}
+
+.loading-overlay {
+  text-align: center;
+  padding: 2rem;
+}
+
+/* NOVOS ESTILOS PARA ITENS RECENTES */
+mat-divider {
+  margin: 0.5rem 0;
+}
+
+.recent-items-container {
+  text-align: left;
+  padding: 0 16px 8px 16px;
+  flex-grow: 1; /* Faz esta seção crescer para preencher o espaço */
+}
+
+.recent-items-title {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(0,0,0,0.7);
+}
+
+.recent-items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-items-list li {
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adiciona '...' se o texto for muito longo */
+  padding: 0.25rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.recent-items-list li:last-child {
+  border-bottom: none;
+}
+
+.no-items-message {
+  font-size: 0.8rem;
+  color: grey;
+  text-align: center;
+  padding: 1rem 0;
+}
