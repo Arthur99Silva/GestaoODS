@@ -28,11 +28,13 @@ export class FuncionarioService {
     }
     return funcionario;
   }
-
   async update(cpf: string, dto: UpdateFuncionarioDto): Promise<Funcionario> {
-    const funcionario = await this.findOne(cpf);
-    Object.assign(funcionario, dto);
-    return this.funcionarioRepository.save(funcionario);
-  }
+    const result = await this.funcionarioRepository.update({ cpf }, dto);
 
+    if (result.affected === 0) {
+      throw new NotFoundException(`Funcionário com CPF ${cpf} não encontrado.`);
+    }
+
+    return this.findOne(cpf);
+  }
 }

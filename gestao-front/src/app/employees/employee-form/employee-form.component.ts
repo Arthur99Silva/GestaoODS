@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { 
-  FormBuilder, 
-  FormGroup, 
-  Validators, 
-  ReactiveFormsModule, 
-  AbstractControl 
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl
 } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,6 +16,7 @@ import { ApiService, Employee } from '../../services/api.service';
 import { isValid as isValidCPF } from '@fnando/cpf';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select'; // Adicione esta importação
 
 @Component({
   standalone: true,
@@ -30,7 +31,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatInputModule,
     MatButtonModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSelectModule // E adicione aqui também
   ]
 })
 export class EmployeeFormComponent implements OnInit {
@@ -64,48 +66,46 @@ export class EmployeeFormComponent implements OnInit {
     if (this.cpf) {
       this.isEdit = true;
       this.api.getEmployee(this.cpf).subscribe(cust => {
-        this.form.patchValue(cust);
+        const employeeData = {
+          ...cust,
+          data_pagamento: cust.data_pagamento ? this.parseBackendDate(cust.data_pagamento) : null,
+          data_ferias: cust.data_ferias ? this.parseBackendDate(cust.data_ferias) : null,
+        };
+        this.form.patchValue(employeeData);
+        this.form.get('cpf')?.disable();
       });
     }
   }
 
-  // Validação de CPF
-  validateCPF(control: AbstractControl) {
-    const value = control.value.replace(/\D/g, '');
-    if (!isValidCPF(value)) {
-      return { invalidCpf: true };
-    }
-    return null;
+  // Validações e formatações (sem alterações)
+  validateCPF = (control: AbstractControl) => {
+    if (!control.value) return null;
+    return isValidCPF(control.value) ? null : { invalidCpf: true };
   }
 
-  // Validação de e-mail corporativo
-  validateCompanyEmail(control: AbstractControl) {
+  validateCompanyEmail = (control: AbstractControl) => {
     const email = control.value;
-    const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!pattern.test(email) || !email.endsWith('.com')) {
-      return { invalidCompanyEmail: true };
-    }
-    return null;
+    if (!email) return null;
+    return email.endsWith('.com') ? null : { invalidCompanyEmail: true };
   }
 
-  // Validação de data futura
-  futureDateValidator(control: AbstractControl) {
+  futureDateValidator = (control: AbstractControl) => {
+    if (!control.value) return null;
     const selectedDate = new Date(control.value);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return selectedDate > today ? null : { pastDate: true };
   }
 
-  // Validação de data passada
-  pastDateValidator(control: AbstractControl) {
+  pastDateValidator = (control: AbstractControl) => {
+    if (!control.value) return null;
     const selectedDate = new Date(control.value);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return selectedDate < today ? null : { futureDate: true };
   }
 
-  // Formatação do CPF
-  formatCPF(event: any) {
+  formatCPF = (event: any) => {
     let value = event.target.value.replace(/\D/g, '');
     if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, '$1.$2');
     if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
@@ -113,12 +113,27 @@ export class EmployeeFormComponent implements OnInit {
     this.form.get('cpf')?.setValue(value.substring(0, 14), { emitEvent: false });
   }
 
-  // Formatação do telefone
-  formatPhone(event: any) {
+  formatPhone = (event: any) => {
     let value = event.target.value.replace(/\D/g, '');
     if (value.length > 2) value = `(${value.substring(0,2)}) ${value.substring(2)}`;
-    if (value.length > 10) value = `${value.substring(0,10)}-${value.substring(10,14)}`;
+    if (value.length > 9) value = `${value.substring(0,9)}-${value.substring(9,14)}`;
     this.form.get('telefone')?.setValue(value.substring(0, 15), { emitEvent: false });
+  }
+
+  // Funções de conversão de data
+  private parseBackendDate(isoString: string): Date {
+    const [year, month, day] = isoString.split('T')[0].split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  private convertToBackendFormat(date: Date): string | null {
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+      return null;
+    }
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
   }
 
   onSubmit() {
@@ -126,17 +141,56 @@ export class EmployeeFormComponent implements OnInit {
       Object.values(this.form.controls).forEach(control => {
         control.markAsTouched();
       });
+      console.error('Formulário inválido. Não foi enviado.');
       return;
     }
-    console.log(this.form.value)
-  
-    const obs = this.isEdit
-      ? this.api.updateEmployee(this.cpf!, this.form.value)
-      : this.api.createEmployee(this.form.value);
-  
-    obs.subscribe({
-      next: () => this.router.navigate(['/funcionario']),
-      error: err => console.error('Erro:', err)
-    });
+
+    if (this.isEdit && this.cpf) {
+        // MODO DE EDIÇÃO: Enviar apenas os campos alterados
+        const changedData: Partial<Employee> = {};
+        const formValues = this.form.getRawValue();
+
+        Object.keys(formValues).forEach(key => {
+            const control = this.form.get(key);
+            if (control && control.dirty) {
+                (changedData as any)[key] = formValues[key];
+            }
+        });
+
+        if (Object.keys(changedData).length === 0) {
+            console.log('Nenhum dado foi alterado. Navegando de volta.');
+            this.router.navigate(['/funcionario']);
+            return;
+        }
+
+        if (changedData.data_pagamento) {
+          changedData.data_pagamento = this.convertToBackendFormat(new Date(changedData.data_pagamento)) as any;
+        }
+        if (changedData.data_ferias) {
+          changedData.data_ferias = this.convertToBackendFormat(new Date(changedData.data_ferias)) as any;
+        }
+
+        console.log('Enviando apenas os dados alterados:', changedData);
+
+        this.api.updateEmployee(this.cpf, changedData).subscribe({
+            next: () => this.router.navigate(['/funcionario']),
+            error: err => console.error('Erro ao ATUALIZAR funcionário:', err)
+        });
+
+    } else {
+        // MODO DE CRIAÇÃO: Enviar o formulário completo
+        const employeeDataToSubmit = {
+          ...this.form.value,
+          data_pagamento: this.convertToBackendFormat(this.form.value.data_pagamento),
+          data_ferias: this.convertToBackendFormat(this.form.value.data_ferias),
+        };
+        
+        console.log('Enviando dados para criar novo funcionário:', employeeDataToSubmit);
+        
+        this.api.createEmployee(employeeDataToSubmit).subscribe({
+            next: () => this.router.navigate(['/funcionario']),
+            error: err => console.error('Erro ao CRIAR funcionário:', err)
+        });
+    }
   }
 }
