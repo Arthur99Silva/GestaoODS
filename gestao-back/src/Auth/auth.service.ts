@@ -1,5 +1,9 @@
-// src/Auth/auth.service.ts
-import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import {
+  Injectable,
+  UnauthorizedException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthData } from './entity/auth-data.entity';
 import { Repository } from 'typeorm';
@@ -14,11 +18,14 @@ export class AuthService {
     private authRepo: Repository<AuthData>,
   ) {}
 
-
   async login(email: string, senha: string): Promise<{ token: string }> {
-    const user = await this.authRepo.findOneBy({ email, senha });
-
+    const user = await this.authRepo.findOneBy({ email });
     if (!user) {
+      throw new UnauthorizedException('Credenciais inválidas');
+    }
+
+    const senhaOK = await bcrypt.compare(senha, user.senha);
+    if (!senhaOK) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
@@ -30,9 +37,12 @@ export class AuthService {
     return { token };
   }
 
-
   async create(dto: CreateAuthDto): Promise<AuthData> {
-    const novoAuth = this.authRepo.create(dto);
+    const hash = await bcrypt.hash(dto.senha, 10);
+    const novoAuth = this.authRepo.create({
+      email: dto.email,
+      senha: hash,
+    });
     return this.authRepo.save(novoAuth);
   }
 
