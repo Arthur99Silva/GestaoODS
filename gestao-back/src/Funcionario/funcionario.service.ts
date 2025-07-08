@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+  ConflictException,
+} from '@nestjs/common';
 import { CreateFuncionarioDto } from './dto/create-funcionario.dto';
 import { UpdateFuncionarioDto } from './dto/update-funcionario.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,13 +17,36 @@ export class FuncionarioService {
     private readonly funcionarioRepository: Repository<Funcionario>,
   ) {}
 
-  async create(dto: CreateFuncionarioDto): Promise<Funcionario> {
-    const funcionario = this.funcionarioRepository.create(dto);
-    return this.funcionarioRepository.save(funcionario);
+  async create(dto: CreateFuncionarioDto): Promise<{ message: string; data: Funcionario }> {
+    try {
+      const existente = await this.funcionarioRepository.findOneBy({ cpf: dto.cpf });
+      if (existente) {
+        throw new ConflictException(`Funcionário com CPF ${dto.cpf} já existe.`);
+      }
+
+      const funcionario = this.funcionarioRepository.create(dto);
+      const salvo = await this.funcionarioRepository.save(funcionario);
+
+      return {
+        message: 'Funcionário criado com sucesso.',
+        data: salvo,
+      };
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+      console.error(error);
+      throw new InternalServerErrorException('Erro ao criar funcionário.');
+    }
   }
 
   async findAll(): Promise<Funcionario[]> {
-    return this.funcionarioRepository.find();
+    try {
+      return await this.funcionarioRepository.find();
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('Erro ao buscar funcionários.');
+    }
   }
 
   async findOne(cpf: string): Promise<Funcionario> {
@@ -29,10 +57,22 @@ export class FuncionarioService {
     return funcionario;
   }
 
-  async update(cpf: string, dto: UpdateFuncionarioDto): Promise<Funcionario> {
-    const funcionario = await this.findOne(cpf);
-    Object.assign(funcionario, dto);
-    return this.funcionarioRepository.save(funcionario);
-  }
+  async update(
+    cpf: string,
+    dto: UpdateFuncionarioDto,
+  ): Promise<{ message: string; data: Funcionario }> {
+    try {
+      const funcionario = await this.findOne(cpf);
+      Object.assign(funcionario, dto);
+      const salvo = await this.funcionarioRepository.save(funcionario);
 
+      return {
+        message: 'Funcionário atualizado com sucesso.',
+        data: salvo,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(`Erro ao atualizar funcionário com CPF ${cpf}.`);
+    }
+  }
 }
