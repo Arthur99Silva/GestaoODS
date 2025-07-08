@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+  ConflictException,
+} from '@nestjs/common';
 import { CreateEmpresaDto } from './dto/create-empresa.dto';
 import { UpdateEmpresaDto } from './dto/update-empresa.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,33 +17,84 @@ export class EmpresaService {
     private readonly empresaRepository: Repository<Empresa>,
   ) {}
 
-  async create(dto: CreateEmpresaDto): Promise<Empresa> {
-    const novaEmpresa = this.empresaRepository.create(dto);
-    return this.empresaRepository.save(novaEmpresa);
+  async create(dto: CreateEmpresaDto): Promise<{ message: string; data: Empresa }> {
+    try {
+      const existente = await this.empresaRepository.findOne({
+        where: { cnpj_empresa: dto.cnpj_empresa },
+      });
+
+      if (existente) {
+        throw new ConflictException(`Já existe uma empresa com o CNPJ ${dto.cnpj_empresa}.`);
+      }
+
+      const novaEmpresa = this.empresaRepository.create(dto);
+      const empresaSalva = await this.empresaRepository.save(novaEmpresa);
+
+      return {
+        message: 'Empresa cadastrada com sucesso.',
+        data: empresaSalva,
+      };
+    } catch (error) {
+      if (
+        error instanceof ConflictException ||
+        error instanceof InternalServerErrorException
+      ) {
+        throw error;
+      }
+      console.error(error);
+      throw new InternalServerErrorException('Erro ao cadastrar empresa.');
+    }
   }
 
   async findAll(): Promise<Empresa[]> {
-    return this.empresaRepository.find();
+    try {
+      return await this.empresaRepository.find();
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('Erro ao buscar empresas.');
+    }
   }
 
   async findOne(cnpj: string): Promise<Empresa> {
-    const forma = await this.empresaRepository.findOne({
+    const empresa = await this.empresaRepository.findOne({
       where: { cnpj_empresa: cnpj },
     });
-    if (!forma) {
-      throw new NotFoundException(`Empresa ${cnpj} não encontrada.`);
+    if (!empresa) {
+      throw new NotFoundException(`Empresa com CNPJ ${cnpj} não encontrada.`);
     }
-    return forma;
+    return empresa;
   }
 
-  async update(cnpj: string, dto: UpdateEmpresaDto): Promise<Empresa> {
-    const forma = await this.findOne(cnpj);
-    const updated = Object.assign(forma, dto);
-    return this.empresaRepository.save(updated);
+  async update(cnpj: string, dto: UpdateEmpresaDto): Promise<{ message: string; data: Empresa }> {
+    try {
+      const empresa = await this.findOne(cnpj);
+      const atualizada = Object.assign(empresa, dto);
+      const salva = await this.empresaRepository.save(atualizada);
+
+      return {
+        message: 'Empresa atualizada com sucesso.',
+        data: salva,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(
+        `Erro ao atualizar a empresa com CNPJ ${cnpj}.`,
+      );
+    }
   }
 
-  async remove(cnpj: string): Promise<void> {
-    const forma = await this.findOne(cnpj);
-    await this.empresaRepository.remove(forma);
+  async remove(cnpj: string): Promise<{ message: string }> {
+    try {
+      const empresa = await this.findOne(cnpj);
+      await this.empresaRepository.remove(empresa);
+      return {
+        message: `Empresa com CNPJ ${cnpj} removida com sucesso.`,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(
+        `Erro ao remover a empresa com CNPJ ${cnpj}.`,
+      );
+    }
   }
 }

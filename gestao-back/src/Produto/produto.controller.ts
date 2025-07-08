@@ -18,13 +18,15 @@ import { JwtAuthGuard } from 'src/Auth/jwt-auth.guard';
 
 @Controller('produto')
 export class ProdutoController {
-  constructor(private readonly produtoService: ProdutoService) {}
+  constructor(private readonly produtoService: ProdutoService) { }
 
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createProdutoDto: CreateProdutoDto) {
-    const produto: Produto = await this.produtoService.create(createProdutoDto);
-    return instanceToPlain(produto);
+    const resultado = await this.produtoService.create(createProdutoDto);
+    // resultado.message é a mensagem de sucesso
+    // resultado.data é o Produto criado
+    return instanceToPlain(resultado);
   }
 
   @UseGuards(JwtAuthGuard)

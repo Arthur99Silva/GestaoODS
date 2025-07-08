@@ -35,15 +35,4 @@ export class PedidoController {
     return this.pedidoService.getPedidosPorCpfCnpj(cpf_cnpj, orderBy, order);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('data')
-  getPedidosPorData(
-    @Query('data') data: string,
-    @Query('orderBy') orderBy?: 'data_venda' | 'valor_total',
-    @Query('order') order?: 'ASC' | 'DESC',
-  ) {
-    return this.pedidoService.getPedidosPorData(data, orderBy, order);
-  }
-
-
 }
