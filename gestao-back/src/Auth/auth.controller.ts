@@ -3,7 +3,6 @@ import {
   Post,
   Body,
   UnauthorizedException,
-  Get,
   Delete,
   Param,
   UseGuards,
@@ -34,7 +33,13 @@ export class AuthController {
 
   @Post('register')
   async create(@Body() dto: CreateAuthDto) {
-    return this.authService.create(dto);
+    const user = await this.authService.create(dto);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const resposta = { ...user } as any;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    delete resposta.senha;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return resposta;
   }
 
   @UseGuards(JwtAuthGuard)
