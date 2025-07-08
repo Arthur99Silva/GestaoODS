@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Injectable,
   NotFoundException,
@@ -12,7 +14,6 @@ import { Cliente } from 'src/Cliente/entite/cliente.entity';
 import { Funcionario } from 'src/Funcionario/entite/funcionario.entity';
 import { FormaPagamento } from 'src/Forma_Pagamento/entite/forma-pagamento.entity';
 import { ItemProduto } from 'src/Item_Produto/entite/item-produtos.entity';
-import { isDate } from 'class-validator';
 
 @Injectable()
 export class PedidoService {
@@ -31,7 +32,7 @@ export class PedidoService {
 
     @InjectRepository(ItemProduto)
     private readonly itemProdutoRepository: Repository<ItemProduto>,
-  ) { }
+  ) {}
 
   async create(dto: CreatePedidoDto): Promise<any> {
     try {
@@ -76,7 +77,9 @@ export class PedidoService {
       // Verifica se id_pedido foi realmente retornado
       if (!pedidoSalvo.id_pedido || isNaN(pedidoSalvo.id_pedido)) {
         console.error('id_pedido ausente ou inválido:', pedidoSalvo);
-        throw new InternalServerErrorException('Falha ao salvar pedido. id_pedido não gerado.');
+        throw new InternalServerErrorException(
+          'Falha ao salvar pedido. id_pedido não gerado.',
+        );
       }
 
       if (dto.itens && dto.itens.length > 0) {
@@ -98,7 +101,10 @@ export class PedidoService {
       };
     } catch (error) {
       // Se for um erro conhecido (NotFound, etc), relança
-      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
         throw error;
       }
 
@@ -147,4 +153,21 @@ export class PedidoService {
     });
   }
 
+  async monthStats(numero: number) {
+    const now = new Date();
+    const ano = now.getUTCFullYear();
+    const stats = await this.pedidoRepository
+      .createQueryBuilder('pedido')
+      .select('COUNT(*)', 'numero_vendas')
+      .addSelect('SUM(pedido.valor_total)', 'valor_total_vendas')
+      .where('EXTRACT(YEAR FROM pedido.data_venda) = :year', { year: ano })
+      .andWhere('EXTRACT(MONTH FROM pedido.data_venda) = :month', {
+        month: numero,
+      })
+      .getRawOne();
+    return {
+      numero_vendas: Number(stats.numero_vendas),
+      valor_total_vendas: Number(stats.valor_total_vendas) || 0,
+    };
+  }
 }
