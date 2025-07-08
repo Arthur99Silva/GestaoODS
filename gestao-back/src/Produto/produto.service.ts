@@ -19,7 +19,9 @@ export class ProdutoService {
     private readonly fornecedorRepository: Repository<Fornecedor>,
   ) {}
 
-  async create(dto: CreateProdutoDto): Promise<{ message: string; data: Produto }> {
+  async create(
+    dto: CreateProdutoDto,
+  ): Promise<{ message: string; data: Produto }> {
     try {
       const fornecedor = await this.fornecedorRepository.findOne({
         where: { cpf_cnpj_fornecedor: dto.fk_cpf_cnpj_fornecedor },
@@ -64,7 +66,10 @@ export class ProdutoService {
     return produto;
   }
 
-  async update(id: number, dto: UpdateProdutoDto): Promise<{ message: string; data: Produto }> {
+  async update(
+    id: number,
+    dto: UpdateProdutoDto,
+  ): Promise<{ message: string; data: Produto }> {
     try {
       const produto = await this.findOne(id);
       const updated = Object.assign(produto, dto);
@@ -76,12 +81,15 @@ export class ProdutoService {
         });
 
         if (!novoFornecedor) {
-          throw new NotFoundException('Fornecedor a ser atualizado não encontrado.');
+          throw new NotFoundException(
+            'Fornecedor a ser atualizado não encontrado.',
+          );
         }
 
         if (
           produto.fornecedor &&
-          produto.fornecedor.cpf_cnpj_fornecedor !== novoFornecedor.cpf_cnpj_fornecedor
+          produto.fornecedor.cpf_cnpj_fornecedor !==
+            novoFornecedor.cpf_cnpj_fornecedor
         ) {
           const fornecedorAntigo = await this.fornecedorRepository.findOne({
             where: {
@@ -112,7 +120,9 @@ export class ProdutoService {
     } catch (error) {
       console.error(error);
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException(`Erro ao atualizar produto ${id}.`);
+      throw new InternalServerErrorException(
+        `Erro ao atualizar produto ${id}.`,
+      );
     }
   }
 
@@ -131,6 +141,20 @@ export class ProdutoService {
       console.error(error);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException(`Erro ao remover produto ${id}.`);
+    }
+  }
+
+  async encontrar100MenorQuantidade(): Promise<Produto[]> {
+    try {
+      return await this.produtoRepository.find({
+        order: { qtd_produto: 'ASC' },
+        take: 100,
+      });
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(
+        'Erro ao buscar produtos com menor quantidade.',
+      );
     }
   }
 }
