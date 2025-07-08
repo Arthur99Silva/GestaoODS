@@ -57,22 +57,13 @@ export class FuncionarioService {
     return funcionario;
   }
 
-  async update(
-    cpf: string,
-    dto: UpdateFuncionarioDto,
-  ): Promise<{ message: string; data: Funcionario }> {
-    try {
-      const funcionario = await this.findOne(cpf);
-      Object.assign(funcionario, dto);
-      const salvo = await this.funcionarioRepository.save(funcionario);
+  async update(cpf: string, dto: UpdateFuncionarioDto): Promise<Funcionario> {
+    const result = await this.funcionarioRepository.update({ cpf }, dto);
 
-      return {
-        message: 'Funcionário atualizado com sucesso.',
-        data: salvo,
-      };
-    } catch (error) {
-      console.error(error);
-      throw new InternalServerErrorException(`Erro ao atualizar funcionário com CPF ${cpf}.`);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Funcionário com CPF ${cpf} não encontrado.`);
     }
+
+    return this.findOne(cpf);
   }
 }
