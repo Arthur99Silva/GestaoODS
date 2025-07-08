@@ -1,29 +1,35 @@
 // src/app/home/home.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider'; // Importe o MatDividerModule
-import { ApiService } from '../services/api.service';
-import { forkJoin } from 'rxjs';
+import { MatDividerModule } from '@angular/material/divider';
+import { ApiService, SalesStats, Product } from '../services/api.service'; // Importar Product
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table'; // Importar MatTableModule
 
 interface DashboardCard {
   title: string;
   count: number;
   icon: string;
   link: string;
-  recentItems: any[]; // Adicionado para guardar os últimos itens
+  recentItems: any[];
 }
 
-// Interfaces para tipar os dados da API
 interface Customer { [key: string]: any; }
 interface Company { [key: string]: any; }
 interface Employee { [key: string]: any; }
 interface Supplier { [key: string]: any; }
-interface Product { [key: string]: any; }
 interface Sale { [key: string]: any; }
+
+interface MonthlyStats extends SalesStats {
+  monthName: string;
+  monthNumber: number;
+}
 
 @Component({
   standalone: true,
@@ -36,17 +42,27 @@ interface Sale { [key: string]: any; }
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatDividerModule // Adicione o MatDividerModule aos imports
+    MatDividerModule,
+    MatProgressBarModule,
+    CurrencyPipe,
+    MatTableModule, // Adicionar MatTableModule aos imports
   ],
 })
 export class HomeComponent implements OnInit {
   dashboardCards: DashboardCard[] = [];
+  monthlyStats: MonthlyStats[] = [];
+  lowStockProducts: Product[] = []; // Nova propriedade para produtos com baixo estoque
+  displayedColumns: string[] = ['nome_produto', 'qtd_produto']; // Colunas da nova tabela
   isLoading = true;
+  isLoadingStats = true;
+  isLoadingProducts = true; // Novo estado de carregamento para produtos
 
   constructor(private api: ApiService) {}
 
   ngOnInit() {
     this.loadDashboardData();
+    this.loadMonthlySalesStats();
+    this.loadLowStockProducts(); // Chamar novo método
   }
 
   loadDashboardData() {
@@ -67,7 +83,6 @@ export class HomeComponent implements OnInit {
         products: Product[];
         sales: Sale[];
       }) => {
-        // Função para pegar os 3 últimos itens e inverter a ordem (mais novo primeiro)
         const getRecentItems = (items: any[]) => items.slice(-3).reverse();
 
         this.dashboardCards = [
@@ -84,6 +99,56 @@ export class HomeComponent implements OnInit {
         console.error('Erro ao carregar dados da dashboard', err);
         this.isLoading = false;
       }
+    });
+  }
+
+  loadMonthlySalesStats() {
+    this.isLoadingStats = true;
+    const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+    const monthRequests = Array.from({ length: 12 }, (_, i) =>
+      this.api.getSalesStatsForMonth(i + 1).pipe(
+        map(stats => ({
+          ...stats,
+          monthName: monthNames[i],
+          monthNumber: i + 1
+        })),
+        catchError(error => {
+          console.error(`Erro ao buscar estatísticas para o mês ${i + 1}`, error);
+          return of({
+            numero_vendas: 0,
+            valor_total_vendas: 0,
+            monthName: monthNames[i],
+            monthNumber: i + 1
+          });
+        })
+      )
+    );
+
+    forkJoin(monthRequests).subscribe({
+      next: (stats) => {
+        this.monthlyStats = stats;
+        this.isLoadingStats = false;
+      },
+      error: (err) => {
+        console.error('Erro ao carregar estatísticas mensais', err);
+        this.isLoadingStats = false;
+      }
+    });
+  }
+
+  // Novo método para carregar produtos com baixo estoque
+  loadLowStockProducts() {
+    this.isLoadingProducts = true;
+    this.api.getProducts().pipe(
+      map(products => products.sort((a, b) => a.qtd_produto - b.qtd_produto).slice(0, 100)),
+      catchError(error => {
+        console.error('Erro ao buscar produtos', error);
+        return of([]); // Retorna um array vazio em caso de erro
+      })
+    ).subscribe(products => {
+      this.lowStockProducts = products;
+      this.isLoadingProducts = false;
     });
   }
 }
