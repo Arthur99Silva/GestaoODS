@@ -17,6 +17,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApiService, Product, Supplier } from '../../services/api.service';
 import { Subject, forkJoin } from 'rxjs'; // Importando forkJoin
 import { takeUntil, debounceTime } from 'rxjs/operators';
+import { MatPaginatorModule } from "@angular/material/paginator";
 
 @Component({
   selector: 'app-product-management',
@@ -31,8 +32,9 @@ import { takeUntil, debounceTime } from 'rxjs/operators';
     MatTableModule,
     MatSelectModule,
     MatIconModule,
-    MatSnackBarModule
-  ],
+    MatSnackBarModule,
+    MatPaginatorModule
+],
   templateUrl: './product-management.component.html',
   styleUrls: ['./product-management.component.css']
 })

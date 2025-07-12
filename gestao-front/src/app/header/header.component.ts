@@ -20,7 +20,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatButtonModule,
     MatIconModule,
     MatMenuModule
-  ]
+]
 })
 export class HeaderComponent {
   // Links equivalentes ao Home
@@ -58,17 +58,13 @@ export class HeaderComponent {
       routes: [
         { path: '/fornecedor', label: 'Listar Fornecedores' },
         { path: '/fornecedor/new', label: 'Cadastrar Fornecedor' },
-        { path: '/fornecedor-produtos', label: 'Consultar Produtos' } // Label ajustado para clareza
+        { path: '/fornecedor-produtos', label: 'Consultar Produtos' }
       ]
     },
-    // Novo menu para Produtos
     {
       label: 'Produtos',
       routes: [
         { path: '/products', label: 'Gerenciar Produtos' }
-        // Se você tivesse rotas separadas para listar e cadastrar:
-        // { path: '/products', label: 'Listar Produtos' },
-        // { path: '/products/new', label: 'Cadastrar Produto' }
       ]
     }
   ];

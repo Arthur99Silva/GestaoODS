@@ -15,6 +15,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService, Supplier } from '../../services/api.service';
 import { isValid as isValidCPF } from '@fnando/cpf';
 import { isValid as isValidCNPJ } from '@fnando/cnpj';
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   standalone: true,
@@ -27,8 +28,9 @@ import { isValid as isValidCNPJ } from '@fnando/cnpj';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
-  ]
+    MatButtonModule,
+    MatIconModule
+]
 })
 export class SupplierFormComponent implements OnInit {
   form!: FormGroup;

@@ -1,89 +1,116 @@
-/* Adicione ou atualize os estilos existentes com estes */
-
+/* home.component.css */
 .home-card {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
-  text-align: center;
-}
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 1.5rem;
-}
-.actions button {
-  min-width: 220px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-.actions button mat-icon {
-  vertical-align: middle;
+.card-header {
+  margin-bottom: 1.5rem;
+}
+
+.card-header h1 {
+  color: var(--primary-color);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.action-button {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.action-button mat-icon {
   margin-right: 8px;
 }
 
 .dashboard-container {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
-  justify-content: center;
-  margin-top: 2rem;
+  margin: 2rem auto;
+  max-width: 1200px;
   padding: 0 1rem;
 }
 
 .dashboard-card {
-  width: 250px;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .dashboard-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
 }
 
-.dashboard-card mat-card-header,
-.count-section {
+.dashboard-header {
+  background: rgba(67, 97, 238, 0.05);
+  padding: 1rem;
   cursor: pointer;
+}
+
+.dashboard-header:hover {
+  background: rgba(67, 97, 238, 0.08);
+}
+
+.dashboard-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.dashboard-icon mat-icon {
+  font-size: 24px;
 }
 
 .count-section {
   text-align: center;
+  padding: 1.5rem 1rem;
+  cursor: pointer;
 }
 
-.dashboard-card .count {
+.count {
   font-size: 2.5rem;
-  font-weight: bold;
+  font-weight: 600;
+  color: var(--primary-color);
   margin: 0;
   line-height: 1;
 }
 
-.dashboard-card .count + p {
-  margin: 0 0 1rem 0;
-}
-
-.loading-overlay {
-  text-align: center;
-  padding: 2rem;
-}
-
-/* NOVOS ESTILOS PARA ITENS RECENTES */
-mat-divider {
-  margin: 0.5rem 0;
+.count-label {
+  color: var(--text-secondary);
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
 }
 
 .recent-items-container {
-  text-align: left;
-  padding: 0 16px 8px 16px;
-  flex-grow: 1; /* Faz esta seção crescer para preencher o espaço */
+  padding: 1rem;
 }
 
 .recent-items-title {
-  margin: 0.5rem 0;
+  margin: 0 0 0.5rem;
   font-size: 0.9rem;
   font-weight: 500;
-  color: rgba(0,0,0,0.7);
+  color: var(--text-secondary);
 }
 
 .recent-items-list {
@@ -92,22 +119,59 @@ mat-divider {
   margin: 0;
 }
 
-.recent-items-list li {
-  font-size: 0.85rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* Adiciona '...' se o texto for muito longo */
-  padding: 0.25rem 0;
-  border-bottom: 1px solid #eee;
+.recent-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.recent-items-list li:last-child {
+.recent-item:last-child {
   border-bottom: none;
 }
 
+.item-icon {
+  font-size: 8px;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  color: var(--primary-color);
+}
+
 .no-items-message {
-  font-size: 0.8rem;
-  color: grey;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
   text-align: center;
   padding: 1rem 0;
+  margin: 0;
+}
+
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  color: var(--text-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .actions {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .home-card {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
 }

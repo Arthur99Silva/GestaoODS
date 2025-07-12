@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider'; // Importe o MatDividerModule
 import { ApiService } from '../services/api.service';
 import { forkJoin } from 'rxjs';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 interface DashboardCard {
   title: string;
@@ -37,7 +39,10 @@ interface Sale { [key: string]: any; }
     MatButtonModule,
     MatIconModule,
     MatDividerModule // Adicione o MatDividerModule aos imports
-  ],
+    ,
+    MatProgressSpinnerModule,
+    MatProgressBarModule
+],
 })
 export class HomeComponent implements OnInit {
   dashboardCards: DashboardCard[] = [];

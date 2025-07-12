@@ -16,7 +16,9 @@ import { ApiService, Employee } from '../../services/api.service';
 import { isValid as isValidCPF } from '@fnando/cpf';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatSelectModule } from '@angular/material/select'; // Adicione esta importação
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from "@angular/material/icon";
+import { MatProgressBarModule } from "@angular/material/progress-bar"; // Adicione esta importação
 
 @Component({
   standalone: true,
@@ -33,7 +35,10 @@ import { MatSelectModule } from '@angular/material/select'; // Adicione esta imp
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule // E adicione aqui também
-  ]
+    ,
+    MatIconModule,
+    MatProgressBarModule
+]
 })
 export class EmployeeFormComponent implements OnInit {
   form!: FormGroup;

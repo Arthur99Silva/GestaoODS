@@ -1,103 +1,141 @@
 /* sales-list.component.css */
+.list-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 16px 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(67, 97, 238, 0.1);
+}
+
+.header h2 {
+  color: var(--primary-color);
+  font-size: 1.8rem;
+  margin: 0;
 }
 
 .new-sale-button {
-  margin-left: auto;
-  /* Empurra o botão de nova venda para a direita se houver espaço */
+  background: var(--gradient-primary);
+  color: white !important;
+  padding: 0 24px;
+  height: 44px;
+  font-weight: 500;
 }
 
 .filter-container {
   display: flex;
+  gap: 16px;
   flex-wrap: wrap;
-  /* Permite que os campos quebrem linha */
-  gap: 1rem;
-  /* Espaçamento entre os campos de filtro */
-  margin-bottom: 1.5rem;
-  align-items: flex-start;
-  /* Alinha itens no topo se quebrar linha */
+  margin-bottom: 24px;
+  background: rgba(67, 97, 238, 0.05);
+  padding: 16px;
+  border-radius: 12px;
 }
 
 .filter-field {
-  min-width: 200px;
-  /* Largura mínima para cada campo */
   flex: 1;
-  /* Permite que os campos cresçam */
+  min-width: 200px;
 }
 
 .clear-button {
-  /* Estilo para o botão de limpar, pode precisar de ajuste de margem vertical */
-  /* Exemplo: margin-top: 8px; se os form fields tiverem padding interno */
-  height: 50px;
-  /* Altura aproximada do mat-form-field outlined */
+  border-color: var(--danger-color);
+  color: var(--danger-color);
   align-self: center;
-  /* Centraliza verticalmente com os campos de filtro */
 }
 
+.table-container {
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 24px 0;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+}
 
 .full-table {
   width: 100%;
+}
+
+.mat-sort-header-container {
+  display: flex;
+  justify-content: center;
+}
+
+.mat-sort-header-arrow {
+  color: white !important;
 }
 
 .no-results {
   text-align: center;
-  padding: 20px;
-  color: #777;
-  margin-top: 1rem;
+  padding: 32px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
 }
 
-/* Ajuste para o cabeçalho se o botão "Nova Venda" for para outra linha em telas pequenas */
-@media (max-width: 780px) {
+/* Hover effects */
+.mat-row {
+  transition: background-color 0.2s ease;
+}
 
-  /* Ajuste o breakpoint conforme necessário */
+.mat-row:hover {
+  background-color: rgba(67, 97, 238, 0.08) !important;
+}
+
+/* Paginator styling */
+.mat-paginator {
+  border-radius: 0 0 12px 12px;
+  background: rgba(67, 97, 238, 0.03) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .filter-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .filter-field {
+    width: 100%;
+  }
+  
   .header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
   }
-
+  
   .new-sale-button {
-    margin-left: 0;
-    margin-top: 1rem;
-  }
-
-  .clear-button {
     width: 100%;
-    /* Faz o botão de limpar ocupar toda a largura abaixo dos filtros */
-    margin-top: 0.5rem;
   }
 }
 
-.list-card {
-  padding: 20px;
-  margin: 20px;
+.text-right {
+  text-align: right;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+.text-center {
+  text-align: center;
 }
 
-.full-table {
-  width: 100%;
+.no-results mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+  opacity: 0.6;
 }
 
-
-.mat-paginator {
-  background: transparent;
-  margin-top: 16px;
+.no-results p {
+  margin: 0;
 }
 
-.search-container {
-  margin-bottom: 20px;
-}
-
-.full-width {
-  width: 100%;
+button mat-icon {
+  margin-right: 8px;
 }

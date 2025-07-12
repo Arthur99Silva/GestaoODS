@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService, Company } from '../../services/api.service';
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   standalone: true,
@@ -24,8 +25,9 @@ import { ApiService, Company } from '../../services/api.service';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
-  ]
+    MatButtonModule,
+    MatIconModule
+]
 })
 export class CompanyFormComponent implements OnInit {
   form!: FormGroup;

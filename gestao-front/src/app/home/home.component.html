@@ -1,57 +1,108 @@
 <mat-card class="home-card">
-  <h1>Menu Principal</h1>
+  <div class="card-header">
+    <h1>Menu Principal</h1>
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="accent"></mat-progress-bar>
+  </div>
+  
   <div class="actions">
-    <button mat-raised-button color="warn" routerLink="/fornecedor-produtos">
+    <button mat-raised-button color="warn" routerLink="/fornecedor-produtos" class="action-button">
       <mat-icon>search</mat-icon>
       Consultar Produtos Fornecedor
     </button>
-    <button mat-raised-button color="primary" routerLink="/products">
+    
+    <button mat-raised-button color="primary" routerLink="/products" class="action-button">
       <mat-icon>inventory_2</mat-icon>
       Gerenciar Produtos
     </button>
-    <button mat-raised-button color="primary" routerLink="/clientes">Listar Clientes</button>
-    <button mat-raised-button color="accent" routerLink="/clientes/new">Cadastrar Cliente</button>
-    <button mat-raised-button color="primary" routerLink="/empresa">Listar Empresas</button>
-    <button mat-raised-button color="accent" routerLink="/empresa/new">Cadastrar Empresa</button>
-    <button mat-raised-button color="primary" routerLink="/funcionario">Listar Funcionários</button>
-    <button mat-raised-button color="accent" routerLink="/funcionario/new">Cadastrar Funcionário</button>
-    <button mat-raised-button color="primary" routerLink="/vendas">Listar Vendas</button>
-    <button mat-raised-button color="accent" routerLink="/vendas/new">Cadastrar Venda</button>
-    <button mat-raised-button color="primary" routerLink="/fornecedor">Listar Fornecedor</button>
-    <button mat-raised-button color="accent" routerLink="/fornecedor/new">Cadastrar Fornecedor</button>
+    
+    <button mat-raised-button color="primary" routerLink="/clientes" class="action-button">
+      <mat-icon>people</mat-icon>
+      Listar Clientes
+    </button>
+    
+    <button mat-raised-button color="accent" routerLink="/clientes/new" class="action-button">
+      <mat-icon>person_add</mat-icon>
+      Cadastrar Cliente
+    </button>
+    
+    <button mat-raised-button color="primary" routerLink="/empresa" class="action-button">
+      <mat-icon>business</mat-icon>
+      Listar Empresas
+    </button>
+    
+    <button mat-raised-button color="accent" routerLink="/empresa/new" class="action-button">
+      <mat-icon>add_business</mat-icon>
+      Cadastrar Empresa
+    </button>
+    
+    <button mat-raised-button color="primary" routerLink="/funcionario" class="action-button">
+      <mat-icon>badge</mat-icon>
+      Listar Funcionários
+    </button>
+    
+    <button mat-raised-button color="accent" routerLink="/funcionario/new" class="action-button">
+      <mat-icon>person_add_alt</mat-icon>
+      Cadastrar Funcionário
+    </button>
+    
+    <button mat-raised-button color="primary" routerLink="/vendas" class="action-button">
+      <mat-icon>receipt</mat-icon>
+      Listar Vendas
+    </button>
+    
+    <button mat-raised-button color="accent" routerLink="/vendas/new" class="action-button">
+      <mat-icon>add_shopping_cart</mat-icon>
+      Cadastrar Venda
+    </button>
+    
+    <button mat-raised-button color="primary" routerLink="/fornecedor" class="action-button">
+      <mat-icon>local_shipping</mat-icon>
+      Listar Fornecedores
+    </button>
+    
+    <button mat-raised-button color="accent" routerLink="/fornecedor/new" class="action-button">
+      <mat-icon>add_business</mat-icon>
+      Cadastrar Fornecedor
+    </button>
   </div>
 </mat-card>
 
 <div class="dashboard-container" *ngIf="!isLoading">
   <mat-card class="dashboard-card" *ngFor="let card of dashboardCards">
-    <mat-card-header [routerLink]="card.link">
-      <div mat-card-avatar><mat-icon>{{card.icon}}</mat-icon></div>
+    <mat-card-header [routerLink]="card.link" class="dashboard-header">
+      <div mat-card-avatar class="dashboard-icon">
+        <mat-icon>{{card.icon}}</mat-icon>
+      </div>
       <mat-card-title>{{card.title}}</mat-card-title>
     </mat-card-header>
+    
     <mat-card-content>
       <div class="count-section" [routerLink]="card.link">
         <p class="count">{{card.count}}</p>
-        <p>Registrados</p>
+        <p class="count-label">Registrados</p>
       </div>
       
       <mat-divider></mat-divider>
+      
       <div class="recent-items-container">
         <h4 class="recent-items-title">Últimos cadastros:</h4>
         <ng-container *ngIf="card.recentItems.length > 0; else noRecentItems">
           <ul class="recent-items-list">
-            <li *ngFor="let item of card.recentItems">
+            <li *ngFor="let item of card.recentItems" class="recent-item">
+              <mat-icon class="item-icon">fiber_manual_record</mat-icon>
               {{ item.nome || item.name || (item.idVenda ? 'Venda ' + item.idVenda : 'Item sem nome') }}
             </li>
           </ul>
         </ng-container>
         <ng-template #noRecentItems>
-          <p class="no-items-message">Nenhum cadastro recente.</p>
+          <p class="no-items-message">Nenhum cadastro recente</p>
         </ng-template>
       </div>
-      </mat-card-content>
+    </mat-card-content>
   </mat-card>
 </div>
 
 <div *ngIf="isLoading" class="loading-overlay">
-  <p>Carregando dados da dashboard...</p>
+  <mat-spinner diameter="50" color="accent"></mat-spinner>
+  <p class="loading-text">Carregando dashboard...</p>
 </div>

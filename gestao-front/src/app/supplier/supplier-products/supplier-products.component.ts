@@ -17,6 +17,7 @@ import { isValid as isValidCPF } from '@fnando/cpf';
 import { isValid as isValidCNPJ } from '@fnando/cnpj';
 // Import MatSnackBar and MatSnackBarModule
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   standalone: true,
@@ -32,7 +33,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatButtonModule,
     MatTableModule,
     MatSnackBarModule // Add MatSnackBarModule here
-  ]
+    ,
+    MatIconModule
+]
 })
 export class SupplierProductsComponent {
   searchForm: FormGroup;

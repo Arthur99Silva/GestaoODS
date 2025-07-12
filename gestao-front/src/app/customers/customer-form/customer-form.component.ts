@@ -18,6 +18,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { isValid as isValidCPF } from '@fnando/cpf';
 import { isValid as isValidCNPJ } from '@fnando/cnpj';
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   standalone: true,
@@ -33,8 +34,9 @@ import { isValid as isValidCNPJ } from '@fnando/cnpj';
     MatButtonModule,
     MatSnackBarModule,
     MatProgressBarModule,
-    MatProgressSpinnerModule
-  ]
+    MatProgressSpinnerModule,
+    MatIconModule
+]
 })
 export class CustomerFormComponent implements OnInit {
   form!: FormGroup;

@@ -17,6 +17,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   standalone: true, //
@@ -24,14 +25,16 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './login.component.html', //
   styleUrls: ['./login.component.css'], //
   imports: [
-    CommonModule,            //
-    ReactiveFormsModule,     //
-    RouterLink,              //
+    CommonModule, //
+    ReactiveFormsModule, //
+    RouterLink, //
     MatCardModule, //
     MatFormFieldModule, //
     MatInputModule, //
     MatButtonModule //
-  ]
+    ,
+    MatIconModule
+]
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup; //
@@ -59,9 +62,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('token', response.token);
         this.router.navigate(['/home']);
       },
-      // AJUSTE APLICADO AQUI:
       error: (err: HttpErrorResponse) => {
-        // Trocamos err.message por err.error.message para ver o detalhe do NestJS
         console.error('Erro detalhado do backend:', err.error.message);
       }
     });

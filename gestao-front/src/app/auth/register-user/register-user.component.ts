@@ -14,6 +14,7 @@ import { RouterLink, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { ApiService, User } from '../../services/api.service';
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   standalone: true,
@@ -21,14 +22,16 @@ import { ApiService, User } from '../../services/api.service';
   templateUrl: './register-user.component.html',
   styleUrls: ['./register-user.component.css'],
   imports: [
-    CommonModule,            // para *ngIf, *ngFor
-    ReactiveFormsModule,     // para formGroup, formControlName
+    CommonModule, // para *ngIf, *ngFor
+    ReactiveFormsModule, // para formGroup, formControlName
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    RouterLink               // para <a routerLink>
-  ]
+    RouterLink // para <a routerLink>
+    ,
+    MatIconModule
+]
 })
 export class RegisterUserComponent implements OnInit {
   registerForm!: FormGroup;
