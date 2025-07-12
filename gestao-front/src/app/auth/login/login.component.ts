@@ -54,17 +54,19 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     console.log('Enviando para a API:', this.loginForm.value);
-  
+
     if (this.loginForm.invalid) return;
-  
+
     this.api.login(this.loginForm.value).subscribe({
       next: (response: any) => {
         localStorage.setItem('token', response.token);
-        this.router.navigate(['/home']);
+        // Check for returnUrl in query params
+        const returnUrl = this.router.parseUrl(this.router.url).queryParams['returnUrl'] || '/home';
+        this.router.navigateByUrl(returnUrl);
       },
       error: (err: HttpErrorResponse) => {
         console.error('Erro detalhado do backend:', err.error.message);
       }
     });
-  }
+}
 }

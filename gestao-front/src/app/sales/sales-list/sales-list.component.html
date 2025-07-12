@@ -60,7 +60,7 @@
 
       <ng-container matColumnDef="fk_cpf_cnpj_cliente">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>CPF/CNPJ do Cliente</th>
-        <td mat-cell *matCellDef="let sale">{{ sale.cliente?.cpf_cnpj }}</td>
+        <td mat-cell *matCellDef="let sale">{{ formatCpfCnpjForDisplay(sale.cliente?.cpf_cnpj) }}</td>
       </ng-container>
 
       <ng-container matColumnDef="nome_forma_pagamento">

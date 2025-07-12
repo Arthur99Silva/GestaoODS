@@ -1,22 +1,30 @@
-// Em src/app/services/auth.interceptor.ts
-import { HttpInterceptorFn } from '@angular/common/http';
+// src/app/services/auth.interceptor.ts
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  // =================================================================
-  // PASSO DE DIAGNÓSTICO: Adicione este console.log
-  console.log(`[AuthInterceptor] Interceptando a requisição para: ${req.url}`);
-  // =================================================================
-
+  const router = inject(Router);
   const token = localStorage.getItem('token');
 
-  if (!token) {
-    // Se não há token, o interceptor termina aqui para esta requisição.
-    return next(req);
-  }
+  // Clone the request and add the authorization header if token exists
+  const authReq = token 
+    ? req.clone({
+        headers: req.headers.set('Authorization', `Bearer ${token}`),
+      })
+    : req;
 
-  const reqWithAuth = req.clone({
-    headers: req.headers.set('Authorization', `Bearer ${token}`),
-  });
-
-  return next(reqWithAuth);
+  return next(authReq).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        // Token expired or invalid - clear storage and redirect to login
+        localStorage.removeItem('token');
+        router.navigate(['/login'], {
+          queryParams: { returnUrl: router.url }
+        });
+      }
+      return throwError(() => error);
+    })
+  );
 };

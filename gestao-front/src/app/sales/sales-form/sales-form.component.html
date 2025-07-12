@@ -28,7 +28,7 @@
         <mat-label>Cliente</mat-label>
         <mat-select formControlName="fk_cpf_cnpj_cliente" required>
           <mat-option *ngFor="let customer of customers" [value]="customer.cpf_cnpj">
-            {{ customer.nome }} ({{ customer.cpf_cnpj }})
+            {{ customer.nome }} ({{ formatCpfCnpjForDisplay(customer.cpf_cnpj) }})
           </mat-option>
         </mat-select>
         <mat-icon matSuffix>person</mat-icon>

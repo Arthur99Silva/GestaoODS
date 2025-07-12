@@ -251,4 +251,52 @@ export class SalesFormComponent implements OnInit {
 
     return nextDay.toISOString().split('T')[0] + 'T00:00:00.000Z';
   }
+
+    public formatCpfCnpjForDisplay(value?: string): string {
+  if (!value) {
+    return '';
+  }
+
+  // Remove todos os caracteres não numéricos
+  const numericValue = String(value).replace(/\D/g, '');
+
+  if (numericValue.length === 0) {
+    return '';
+  }
+
+  // Determina se é CPF (11 dígitos) ou CNPJ (14 dígitos)
+  const isCpf = numericValue.length <= 11;
+
+  if (isCpf) {
+    // Formatação para CPF (###.###.###-##)
+    const cpf = numericValue.substring(0, 11);
+    let maskedValue = cpf;
+
+    if (cpf.length > 9) {
+      maskedValue = `${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 9)}-${cpf.substring(9)}`;
+    } else if (cpf.length > 6) {
+      maskedValue = `${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6)}`;
+    } else if (cpf.length > 3) {
+      maskedValue = `${cpf.substring(0, 3)}.${cpf.substring(3)}`;
+    }
+
+    return maskedValue;
+  } else {
+    // Formatação para CNPJ (##.###.###/####-##)
+    const cnpj = numericValue.substring(0, 14);
+    let maskedValue = cnpj;
+
+    if (cnpj.length > 12) {
+      maskedValue = `${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8, 12)}-${cnpj.substring(12)}`;
+    } else if (cnpj.length > 8) {
+      maskedValue = `${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8)}`;
+    } else if (cnpj.length > 5) {
+      maskedValue = `${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5)}`;
+    } else if (cnpj.length > 2) {
+      maskedValue = `${cnpj.substring(0, 2)}.${cnpj.substring(2)}`;
+    }
+
+    return maskedValue;
+  }
+}
 }
