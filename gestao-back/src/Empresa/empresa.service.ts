@@ -17,14 +17,18 @@ export class EmpresaService {
     private readonly empresaRepository: Repository<Empresa>,
   ) {}
 
-  async create(dto: CreateEmpresaDto): Promise<{ message: string; data: Empresa }> {
+  async create(
+    dto: CreateEmpresaDto,
+  ): Promise<{ message: string; data: Empresa }> {
     try {
       const existente = await this.empresaRepository.findOne({
         where: { cnpj_empresa: dto.cnpj_empresa },
       });
 
       if (existente) {
-        throw new ConflictException(`Já existe uma empresa com o CNPJ ${dto.cnpj_empresa}.`);
+        throw new ConflictException(
+          `Já existe uma empresa com o CNPJ ${dto.cnpj_empresa}.`,
+        );
       }
 
       const novaEmpresa = this.empresaRepository.create(dto);
@@ -65,12 +69,25 @@ export class EmpresaService {
     return empresa;
   }
 
-  async update(cnpj: string, dto: UpdateEmpresaDto): Promise<{ message: string; data: Empresa }> {
+  async update(
+    cnpj: string,
+    dto: UpdateEmpresaDto,
+  ): Promise<{ message: string; data: Empresa }> {
+    let empresa: Empresa;
     try {
-      const empresa = await this.findOne(cnpj);
+      empresa = await this.findOne(cnpj);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(`Empresa com CNPJ ${cnpj} não encontrada.`);
+      }
+      console.error(error);
+      throw new InternalServerErrorException(
+        `Erro ao buscar empresa com CNPJ ${cnpj}.`,
+      );
+    }
+    try {
       const atualizada = Object.assign(empresa, dto);
       const salva = await this.empresaRepository.save(atualizada);
-
       return {
         message: 'Empresa atualizada com sucesso.',
         data: salva,
@@ -84,8 +101,19 @@ export class EmpresaService {
   }
 
   async remove(cnpj: string): Promise<{ message: string }> {
+    let empresa: Empresa;
     try {
-      const empresa = await this.findOne(cnpj);
+      empresa = await this.findOne(cnpj);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(`Empresa com CNPJ ${cnpj} não encontrada.`);
+      }
+      console.error(error);
+      throw new InternalServerErrorException(
+        `Erro ao buscar empresa com CNPJ ${cnpj}.`,
+      );
+    }
+    try {
       await this.empresaRepository.remove(empresa);
       return {
         message: `Empresa com CNPJ ${cnpj} removida com sucesso.`,
