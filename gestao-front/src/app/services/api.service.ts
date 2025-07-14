@@ -49,6 +49,13 @@ export interface Sales {
   };
 }
 
+// Nova interface para as estatísticas
+export interface SalesStats {
+  numero_vendas: number;
+  valor_total_vendas: number;
+}
+
+
 export interface Company {
   id: string;
   nome_empresa: string;
@@ -198,6 +205,11 @@ export class ApiService {
 
   getSalesbyDate(): Observable<Sales[]> {
     return this.http.get<Sales[]>(`${this.baseUrl}/pedido/data`);
+  }
+  
+  // Novo método para estatísticas
+  getSalesStatsForMonth(month: number): Observable<SalesStats> {
+    return this.http.get<SalesStats>(`${this.baseUrl}/pedido/mes/${month}`);
   }
 
   createSales(sales: Omit<Sales, 'id'>): Observable<Sales> {
