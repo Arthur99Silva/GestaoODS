@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { delay, Observable, of } from 'rxjs';
+import { environment } from '../environments/environment';
 
 export interface User {
   email: string;
@@ -113,9 +114,13 @@ export interface Payment {
 })
 export class ApiService {
   // Alteração: A URL agora aponta para o backend em produção no Render.
-  private baseUrl = 'https://gestaoods.onrender.com';
+  private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) { }
+
+  get<T>(endpoint: string): Observable<T> {
+    return this.http.get<T>(`${this.baseUrl}/${endpoint}`);
+  }
 
   // === Autenticação ===
   login(payload: { email: string; password: string }): Observable<{ token: string }> {
