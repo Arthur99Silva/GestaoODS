@@ -68,7 +68,6 @@
   padding: 2rem;
 }
 
-/* NOVOS ESTILOS PARA ITENS RECENTES */
 mat-divider {
   margin: 0.5rem 0;
 }
@@ -76,7 +75,7 @@ mat-divider {
 .recent-items-container {
   text-align: left;
   padding: 0 16px 8px 16px;
-  flex-grow: 1; /* Faz esta seção crescer para preencher o espaço */
+  flex-grow: 1;
 }
 
 .recent-items-title {
@@ -96,7 +95,7 @@ mat-divider {
   font-size: 0.85rem;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* Adiciona '...' se o texto for muito longo */
+  text-overflow: ellipsis;
   padding: 0.25rem 0;
   border-bottom: 1px solid #eee;
 }
@@ -110,4 +109,65 @@ mat-divider {
   color: grey;
   text-align: center;
   padding: 1rem 0;
+}
+
+/* Novos estilos para o dashboard de vendas */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.stat-item {
+  border: 1px solid #eee;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.stat-item h4 {
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
+  color: #333;
+}
+
+.stat-item p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.table-container {
+  max-height: 400px; /* Altura máxima para a tabela, com scroll */
+  overflow: auto;
+  margin-top: 1rem;
+}
+
+.low-stock-table {
+  width: 100%;
+}
+
+.loading-container {
+    padding: 2rem;
+    text-align: center;
+}
+
+.mat-mdc-cell {
+  padding: 8px;
+}
+.mat-mdc-header-cell {
+    font-weight: bold;
+}
+
+/* Destaque para quantidades baixas */
+.low-stock {
+  color: orange;
+  font-weight: bold;
+}
+
+.very-low-stock {
+  color: red;
+  font-weight: bold;
 }
