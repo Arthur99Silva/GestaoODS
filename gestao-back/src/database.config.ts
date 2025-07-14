@@ -1,37 +1,34 @@
-import { Cliente } from "./Cliente/entite/cliente.entity";
-import { FormaPagamento } from "./Forma_Pagamento/entite/forma-pagamento.entity";
-import { Funcionario } from "./Funcionario/entite/funcionario.entity";
-import { ItemProduto } from "./Item_Produto/entite/item-produtos.entity";
-import { Pedido } from "./Pedido/entite/pedido.entity";
-import { Empresa } from "./Empresa/entity/empresa.entity";
-import { Fornecedor } from "./Fornecedor/entity/fornecedor.entity";
-import { Produto } from "./Produto/entity/produto.entity";
 import { DataSource } from 'typeorm';
-import { AuthData } from "./Auth/entity/auth-data.entity";
+import { Cliente } from './Cliente/entite/cliente.entity';
+import { Empresa } from './Empresa/entity/empresa.entity';
+import { Funcionario } from './Funcionario/entite/funcionario.entity';
+import { Fornecedor } from './Fornecedor/entity/fornecedor.entity';
+import { Produto } from './Produto/entity/produto.entity';
+import { Pedido } from './Pedido/entite/pedido.entity';
+import { ItemProduto } from './Item_Produto/entite/item-produtos.entity';
+import { FormaPagamento } from './Forma_Pagamento/entite/forma-pagamento.entity';
+import { AuthData } from './Auth/entity/auth-data.entity';
 
+// Alteração: O DataSource agora é configurado pela URL do banco de dados
+// e inclui a configuração SSL necessária para o ambiente de produção.
 const dataSourceOptions = new DataSource({
-    type: 'postgres',
-    host: 'localhost', // Endereço do servidor do banco de dados --
-    port: 5432, // Porta padrão do PostgreSQL
-    username: 'postgres',    // Nome do usuário do banco de dados --
-    password: '1234',   // Senha do banco de dados --
-    database: 'ods', // Nome do banco de dadosw
-    entities: [
-        Cliente,
-        FormaPagamento,
-        Funcionario,
-        ItemProduto,
-        Pedido,
-        Empresa,
-        Fornecedor,
-        Produto,
-        AuthData,
-    ], // Entidades
-    synchronize: true, // Sincroniza o esquema do banco de dados, apenas para desenvolvimento
-    logging: true, //Ativa logs para visualizarmos possíveis erros,
-    migrations: [
-        'src/migrations/*.ts', // Caminho para as migrações
-    ],
-})
+  type: 'postgres',
+  url: process.env.DATABASE_URL, // <-- USA A VARIÁVEL DE AMBIENTE DO RENDER
+  ssl: {
+    rejectUnauthorized: false, // <-- NECESSÁRIO PARA CONEXÕES NO RENDER
+  },
+  entities: [
+    Cliente,
+    Empresa,
+    Funcionario,
+    Fornecedor,
+    Produto,
+    Pedido,
+    ItemProduto,
+    FormaPagamento,
+    AuthData,
+  ],
+  synchronize: true, // Manter como true para o projeto acadêmico
+});
 
 export default dataSourceOptions;
