@@ -112,7 +112,8 @@ export interface Payment {
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'http://localhost:3000';
+  // Alteração: A URL agora aponta para o backend em produção no Render.
+  private baseUrl = 'https://gestaoods.onrender.com';
 
   constructor(private http: HttpClient) { }
 
