@@ -3,6 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
   NotFoundException,
+  ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthData } from './entity/auth-data.entity';
@@ -38,6 +39,12 @@ export class AuthService {
   }
 
   async create(dto: CreateAuthDto): Promise<AuthData> {
+    const existing = await this.authRepo.findOne({
+      where: { email: dto.email },
+    });
+    if (existing) {
+      throw new ConflictException(`O e-mail ${dto.email} já está registrado.`);
+    }
     const hash = await bcrypt.hash(dto.senha, 10);
     const novoAuth = this.authRepo.create({
       email: dto.email,

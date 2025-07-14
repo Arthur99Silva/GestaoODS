@@ -27,7 +27,6 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  // Este método agora usa o LoginDto importado, que contém os decorators de validação.
   async login(@Body() dto: LoginDto) {
     const result = await this.authService.login(dto.email, dto.senha);
     if (!result) {
