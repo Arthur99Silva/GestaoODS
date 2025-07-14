@@ -1,14 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Controller,
   Post,
   Body,
   UnauthorizedException,
   Delete,
-  Param,
   UseGuards,
   Patch,
   HttpCode,
   HttpStatus,
+  Req,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
@@ -34,27 +39,31 @@ export class AuthController {
   @Post('register')
   async create(@Body() dto: CreateAuthDto) {
     const user = await this.authService.create(dto);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const resposta = { ...user } as any;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     delete resposta.senha;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return resposta;
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':email/:senha')
-  async remove(@Param('email') email: string, @Param('senha') senha: string) {
-    return this.authService.remove(email, senha);
+  @Delete()
+  async remove(@Req() req) {
+    const email = req.user.email;
+    await this.authService.remove(email);
+    return {
+      email: email,
+    };
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(':email/:senha')
-  async update(
-    @Param('email') email: string,
-    @Param('senha') senha: string,
-    @Body() dto: UpdateAuthDto,
-  ) {
-    return this.authService.update(email, senha, dto);
+  @Patch()
+  async update(@Req() req, @Body() dto: UpdateAuthDto) {
+    if ('email' in dto) {
+      throw new BadRequestException('Atualização do email não é permitida');
+    }
+    const email = req.user.email;
+    const saved = await this.authService.update(email, dto);
+    return {
+      email: saved.email,
+    };
   }
 }

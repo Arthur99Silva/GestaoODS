@@ -46,28 +46,24 @@ export class AuthService {
     return this.authRepo.save(novoAuth);
   }
 
-  async remove(email_retirado: string, senha_retirada: string): Promise<void> {
+  async remove(email: string): Promise<void> {
     const authData = await this.authRepo.findOne({
-      where: { email: email_retirado, senha: senha_retirada },
+      where: { email },
     });
     if (!authData) {
-      throw new Error('Email para deleção não encontrado');
+      throw new Error('Usuário para deleção não encontrado');
     }
     await this.authRepo.remove(authData);
   }
 
-  async update(
-    email_var: string,
-    senha_var: string,
-    dto: UpdateAuthDto,
-  ): Promise<AuthData> {
-    const forma = await this.authRepo.findOne({
-      where: { email: email_var, senha: senha_var },
-    });
-    if (!forma) {
-      throw new NotFoundException('Usuário para update inválido');
+  async update(email: string, dto: UpdateAuthDto) {
+    const user = await this.authRepo.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
     }
-    const updated = Object.assign(forma, dto);
-    return this.authRepo.save(updated);
+    if (dto.senha) {
+      user.senha = await bcrypt.hash(dto.senha, 10);
+    }
+    return this.authRepo.save(user);
   }
 }
