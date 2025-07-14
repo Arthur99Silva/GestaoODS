@@ -3,6 +3,7 @@ import {
   NotFoundException,
   InternalServerErrorException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { CreateFornecedorDto } from './dto/create-fornecedor.dto';
 import { UpdateFornecedorDto } from './dto/update-fornecedor.dto';
@@ -17,7 +18,9 @@ export class FornecedorService {
     private readonly fornecedorRepository: Repository<Fornecedor>,
   ) {}
 
-  async create(dto: CreateFornecedorDto): Promise<{ message: string; data: Fornecedor }> {
+  async create(
+    dto: CreateFornecedorDto,
+  ): Promise<{ message: string; data: Fornecedor }> {
     try {
       const existente = await this.fornecedorRepository.findOne({
         where: { cpf_cnpj_fornecedor: dto.cpf_cnpj_fornecedor },
@@ -71,28 +74,35 @@ export class FornecedorService {
     cpf_cnpj: string,
     dto: UpdateFornecedorDto,
   ): Promise<{ message: string; data: Fornecedor }> {
-    try {
-      const fornecedor = await this.findOne(cpf_cnpj);
-      const atualizado = Object.assign(fornecedor, dto);
-      const salvo = await this.fornecedorRepository.save(atualizado);
-
-      return {
-        message: 'Fornecedor atualizado com sucesso.',
-        data: salvo,
-      };
-    } catch (error) {
-      console.error(error);
-      throw new InternalServerErrorException(
-        `Erro ao atualizar fornecedor ${cpf_cnpj}.`,
-      );
+    const fornecedor = await this.findOne(cpf_cnpj);
+    if ('cpf_cnpj_fornecedor' in dto) {
+      throw new BadRequestException('Não é permitido alterar o CPF/CNPJ.');
     }
+    Object.assign(fornecedor, dto);
+    const salvo = await this.fornecedorRepository.save(fornecedor);
+    return {
+      message: 'Fornecedor atualizado com sucesso.',
+      data: salvo,
+    };
   }
 
   async remove(cpf_cnpj: string): Promise<{ message: string }> {
+    let fornecedor: Fornecedor;
     try {
-      const fornecedor = await this.findOne(cpf_cnpj);
+      fornecedor = await this.findOne(cpf_cnpj);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(
+          `Fornecedor com CPF/CNPJ ${cpf_cnpj} não encontrado.`,
+        );
+      }
+      console.error(error);
+      throw new InternalServerErrorException(
+        `Erro ao buscar fornecedor ${cpf_cnpj}.`,
+      );
+    }
+    try {
       await this.fornecedorRepository.remove(fornecedor);
-
       return {
         message: `Fornecedor ${cpf_cnpj} removido com sucesso.`,
       };
