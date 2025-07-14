@@ -1,0 +1,1 @@
+✅ POST /clientes válido: Cliente criado com cpf_cnpj 33221122256780919

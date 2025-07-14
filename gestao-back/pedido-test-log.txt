@@ -1,0 +1,4 @@
+✅ POST /pedido válido: Pedido criado com sucesso - nota_fiscal: NF123456789
+✅ GET /pedido: Pedidos listados: 15 registros
+✅ GET /pedido/:id: Pedido encontrado ID 15
+✅ GET /pedido/cliente/:cpf_cnpj: Pedidos para cliente listados: 15 registros

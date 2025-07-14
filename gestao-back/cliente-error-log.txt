@@ -1,0 +1,1 @@
+❌ POST /clientes inválido com erros do DTO - 400 Bad Request: O campo cpf_cnpj é obrigatório. | O campo nome deve ser uma string. | O campo email deve ser uma string. | O campo telefone é obrigatório.
