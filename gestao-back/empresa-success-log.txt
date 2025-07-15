@@ -1,0 +1,5 @@
+✅ [CREATE] Criação de empresa válida: Empresa criada com CNPJ 12345678000199
+✅ [FIND ALL] Listagem de empresas: Lista retornada com 1 empresas
+✅ [FIND ONE] Busca por CNPJ: Empresa encontrada com CNPJ 12345678000199
+✅ [UPDATE] Atualização de empresa: Empresa atualizada com novo telefone 987654321
+✅ [REMOVE] Remoção de empresa: Empresa removida com CNPJ 12345678000199

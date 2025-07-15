@@ -1,0 +1,5 @@
+✅ [CREATE] Criação de fornecedor: Fornecedor criado 12345678900
+✅ [FIND ALL] Listar fornecedores: Total 1 fornecedores
+✅ [FIND ONE] Buscar por CPF/CNPJ: Encontrado 12345678900
+✅ [UPDATE] Atualizar fornecedor: Telefone atualizado para 987654321
+✅ [REMOVE] Remover fornecedor: Removido 12345678900

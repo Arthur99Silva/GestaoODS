@@ -1,0 +1,4 @@
+✅ [REGISTER] Cadastro válido: Sucesso para email_tupla0@email.com
+✅ [LOGIN] Login válido: Token gerado eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVtYWlsX3R1cGxhMEBlbWFpbC5jb20iLCJpYXQiOjE3NTI1NTU5MzksImV4cCI6MTc1MjU1OTUzOX0.zxqmZlzoPt3Hq0AtGkmoKalTCxTI8N19G_R4RwuBVik
+✅ [LOGIN] Falha de login senha errada: Bloqueio de login inválido OK
+✅ [REGISTER] Registro duplicado: Registro duplicado bloqueado OK

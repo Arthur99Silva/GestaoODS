@@ -1,0 +1,4 @@
+✅ [CREATE] Criação de funcionário: Funcionário criado CPF 12345678900
+✅ [FIND ALL] Listar funcionários: Total 1 funcionários
+✅ [FIND ONE] Buscar por CPF: Encontrado CPF 12345678900
+✅ [UPDATE] Atualizar funcionário: Telefone atualizado para 987654321

@@ -1,0 +1,7 @@
+✅ [SETUP] Fornecedor criado
+✅ [CREATE] Criação do produto: Produto ID 1 criado
+✅ [FIND ALL] Listagem de produtos: 1 produtos encontrados
+✅ [FIND ONE] Buscar produto por ID: Produto ID 1 encontrado
+✅ [GET] Menor quantidade: 1 produtos retornados
+✅ [UPDATE] Atualização do produto: Produto ID 1 atualizado
+✅ [DELETE] Exclusão do produto: Produto ID 1 removido

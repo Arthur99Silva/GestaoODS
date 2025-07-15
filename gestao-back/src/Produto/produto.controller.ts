@@ -13,7 +13,6 @@ import { ProdutoService } from './produto.service';
 import { CreateProdutoDto } from './dto/create-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto.dto';
 import { instanceToPlain } from 'class-transformer';
-// Caminho corrigido: removido o '/guards'
 import { JwtAuthGuard } from 'src/Auth/jwt-auth.guard';
 
 @Controller('produto')
@@ -24,8 +23,6 @@ export class ProdutoController {
   @Post()
   async create(@Body() createProdutoDto: CreateProdutoDto) {
     const resultado = await this.produtoService.create(createProdutoDto);
-    // resultado.message é a mensagem de sucesso
-    // resultado.data é o Produto criado
     return instanceToPlain(resultado);
   }
 
