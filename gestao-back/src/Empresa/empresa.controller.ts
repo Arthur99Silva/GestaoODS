@@ -13,37 +13,43 @@ import { CreateEmpresaDto } from './dto/create-empresa.dto';
 import { UpdateEmpresaDto } from './dto/update-empresa.dto';
 import { JwtAuthGuard } from 'src/Auth/jwt-auth.guard';
 
-@Controller('empresa')
+@Controller()
 export class EmpresaController {
   constructor(private readonly empresaService: EmpresaService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post('empresa')
   create(@Body() createEmpresaDto: CreateEmpresaDto) {
     return this.empresaService.create(createEmpresaDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get('empresa')
   findAll() {
     return this.empresaService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.empresaService.findOne(id);
+  @Get('empresa/*id')
+  findOne(@Param('id') id: string | string[]) {
+    const cleanId = Array.isArray(id) ? id.join('/') : id;
+    return this.empresaService.findOne(cleanId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEmpresaDto: UpdateEmpresaDto) {
-    return this.empresaService.update(id, updateEmpresaDto);
+  @Patch('empresa/*id')
+  update(
+    @Param('id') id: string | string[],
+    @Body() updateEmpresaDto: UpdateEmpresaDto,
+  ) {
+    const cleanId = Array.isArray(id) ? id.join('/') : id;
+    return this.empresaService.update(cleanId, updateEmpresaDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.empresaService.remove(id);
+  @Delete('empresa/*id')
+  remove(@Param('id') id: string | string[]) {
+    const cleanId = Array.isArray(id) ? id.join('/') : id;
+    return this.empresaService.remove(cleanId);
   }
 }

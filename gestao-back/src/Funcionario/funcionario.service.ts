@@ -3,6 +3,7 @@ import {
   NotFoundException,
   InternalServerErrorException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { CreateFuncionarioDto } from './dto/create-funcionario.dto';
 import { UpdateFuncionarioDto } from './dto/update-funcionario.dto';
@@ -17,11 +18,17 @@ export class FuncionarioService {
     private readonly funcionarioRepository: Repository<Funcionario>,
   ) {}
 
-  async create(dto: CreateFuncionarioDto): Promise<{ message: string; data: Funcionario }> {
+  async create(
+    dto: CreateFuncionarioDto,
+  ): Promise<{ message: string; data: Funcionario }> {
     try {
-      const existente = await this.funcionarioRepository.findOneBy({ cpf: dto.cpf });
+      const existente = await this.funcionarioRepository.findOneBy({
+        cpf: dto.cpf,
+      });
       if (existente) {
-        throw new ConflictException(`Funcionário com CPF ${dto.cpf} já existe.`);
+        throw new ConflictException(
+          `Funcionário com CPF ${dto.cpf} já existe.`,
+        );
       }
 
       const funcionario = this.funcionarioRepository.create(dto);
@@ -58,12 +65,13 @@ export class FuncionarioService {
   }
 
   async update(cpf: string, dto: UpdateFuncionarioDto): Promise<Funcionario> {
+    if ('cpf' in dto) {
+      throw new BadRequestException('Não é permitido alterar o CPF.');
+    }
     const result = await this.funcionarioRepository.update({ cpf }, dto);
-
     if (result.affected === 0) {
       throw new NotFoundException(`Funcionário com CPF ${cpf} não encontrado.`);
     }
-
     return this.findOne(cpf);
   }
 }
