@@ -6,8 +6,8 @@ async function bootstrap() {
 
   // Alteração: O CORS agora permite a origem do frontend em produção (via variável de ambiente)
   // e também a origem local para desenvolvimento.
-  app.enableCors({
-    origin: [process.env.FRONTEND_URL, 'http://localhost:4200', 'https://ea235dcb9df9.ngrok-free.app/'], // <-- AJUSTE AQUI
+   app.enableCors({
+    origin: true, // <- permite qualquer origem
     methods: '*',
     allowedHeaders: '*',
     credentials: true,
